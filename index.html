@@ -15,190 +15,130 @@ body{
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
-#container{ text-align:center; color:#b03060; padding:20px; z-index:5;}
-#text{ font-size:26px; line-height:1.7; min-height:260px; }
-
-/* Kedi */
-#cat{
-  position:fixed; bottom:10%; left:-40%;
-  display:none; z-index:6;
-  animation:catIn 1.5s forwards;
+#container{
+  text-align:center;
+  color:#5a2a3a;
+  padding:30px;
+  z-index:5;
+  background:#fffdf8;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
+  width:85%;
+  max-width:420px;
+  min-height:260px;
 }
-#cat img{ width:140px; }
-@keyframes catIn{ to{ left:12%; } }
-
-/* Pasta */
-#cake{
-  position:fixed; bottom:10%; left:50%;
-  transform:translateX(-50%);
-  display:none; font-size:150px; z-index:6;
-}
-.off{ filter:grayscale(100%); opacity:.6; }
-
-/* Geri sayım */
-.count{ font-size:70px; font-weight:bold; }
-
-/* 🎀 HELLO KITTY’Lİ KART */
-#card{
-  position:fixed; top:-320px; left:50%;
-  transform:translateX(-50%);
-  display:none; z-index:7;
-  padding:36px 44px;
-  border-radius:24px;
-  box-shadow:0 12px 30px rgba(0,0,0,.25);
-  animation:cardDown 1.8s ease-out forwards;
-  font-size:30px;
-  color:#b03060;
-
-  background-image:url("https://i.imgur.com/9M8Q6xN.jpg");
-  background-size:cover;
-  background-position:center;
-  overflow:hidden;
+#text{
+  font-size:24px;
+  line-height:1.7;
+  min-height:220px;
 }
 
-/* Yazı okunurluğu için cam efekti */
-#card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(255,255,255,0.78);
+/* Yazı yazma efekti */
+.paper{
+  animation:ink 0.4s ease;
 }
-
-#card > *{
-  position:relative;
-  z-index:2;
+@keyframes ink{
+  from{opacity:0; transform:translateY(5px);}
+  to{opacity:1; transform:translateY(0);}
 }
-
-#card strong{ font-size:36px; }
-
-@keyframes cardDown{ to{ top:26%; } }
-
-/* Balonlar */
-.balloon{
-  position:fixed; bottom:-60px; font-size:30px; z-index:1;
-  animation:balloonUp 7s linear forwards;
-}
-@keyframes balloonUp{ to{ bottom:110%; } }
 
 /* İmza */
 .signature{
   font-family:'Pacifico',cursive;
-  font-size:36px;
+  font-size:34px;
+  color:#b03060;
+}
+
+/* Balonlar – SADECE FINAL */
+.balloon{
+  position:fixed;
+  bottom:-60px;
+  font-size:32px;
+  z-index:1;
+  animation:balloonUp 6s linear forwards;
+}
+@keyframes balloonUp{ to{ bottom:110%; } }
+
+/* Patlama */
+.explosion{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  font-size:90px;
+  animation:boom 1.2s ease-out forwards;
+}
+@keyframes boom{
+  0%{transform:translate(-50%,-50%) scale(.2);opacity:0;}
+  50%{opacity:1;}
+  100%{transform:translate(-50%,-50%) scale(1.6);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<div id="cat">
-  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-</div>
-
-<div id="cake">🎂</div>
-
 <div id="container">
-  <div id="text">
-    <strong>Koca Ayıdan Sana Bir Sürpriz Var 🎁</strong><br>
-    Sürprizi öğrenmek istiyorsan<br>
-    <strong>ekrana dokun</strong>
-  </div>
-</div>
-
-<div id="card">
-  <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
-  Zarfı açmak için<br>
-  <strong>ekrana dokun</strong>
+  <div id="text"></div>
 </div>
 
 <script>
 const textEl = document.getElementById("text");
-const cat = document.getElementById("cat");
-const cake = document.getElementById("cake");
-const card = document.getElementById("card");
 
-let stage=0, lock=false;
+/* FINAL METİN */
+const lines=[
+  "Doğum Günün Kutlu Olsun <strong>Aşkım</strong> 💚",
+  "İyi ki Varsın",
+  "İyi ki Benimlesin",
+  "",
+  "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
+  "",
+  "<span class='signature'>Kaan’dan İclale</span>",
+  "Doğum günü sürprizi 🎂"
+];
 
-/* Sürekli balon */
-setInterval(createBalloon,700);
+let i=0;
 
-document.body.addEventListener("click",()=>{
-  if(lock) return;
-  if(stage===0){ stage=1; lock=true; showCat(); }
-  else if(stage===3){ stage=4; lock=true; blowCake(); }
-  else if(stage===6){ stage=7; lock=true; showFinal(); }
-});
-
-/* Kedi → Pasta */
-function showCat(){
-  cat.style.display="block";
-  setTimeout(()=>{
-    cake.style.display="block";
-    setTimeout(()=>{
-      cat.style.display="none";
-      textEl.innerHTML="Üflemeden önce dilek tut ✨<br>";
-      startCountdown(8);
-    },1200);
-  },1200);
+/* Yazı yazma efekti */
+function writeLine(){
+  if(i>=lines.length){
+    startBalloons();
+    setTimeout(explosion,3500);
+    return;
+  }
+  const div=document.createElement("div");
+  div.className="paper";
+  div.innerHTML=lines[i];
+  textEl.appendChild(div);
+  i++;
+  setTimeout(writeLine,850);
 }
 
-/* Tek sayı geri sayım */
-function startCountdown(n){
-  stage=2;
-  textEl.innerHTML="Üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1) setTimeout(()=>startCountdown(n-1),1000);
-  else{
+/* Balonlar SADECE FINAL */
+function startBalloons(){
+  for(let j=0;j<14;j++){
     setTimeout(()=>{
-      textEl.innerHTML="Pastayı üfle 🎂<br><strong>üflemek için ekrana dokun</strong>";
-      stage=3; lock=false;
-    },1000);
+      const b=document.createElement("div");
+      b.className="balloon";
+      b.style.left=Math.random()*100+"vw";
+      b.innerHTML="🎈";
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),6000);
+    },j*300);
   }
 }
 
-/* Üfleme */
-function blowCake(){
-  cake.classList.add("off");
-  setTimeout(()=>cat.style.display="block",2000);
-  setTimeout(()=>{
-    cat.style.display="none";
-    cake.style.display="none";
-    textEl.innerHTML="";
-    showLetter();
-  },3800);
+/* Patlama */
+function explosion(){
+  const boom=document.createElement("div");
+  boom.className="explosion";
+  boom.innerHTML="🎆";
+  document.body.appendChild(boom);
+  setTimeout(()=>boom.remove(),1200);
 }
 
-/* Kart */
-function showLetter(){
-  card.style.display="block";
-  stage=6; lock=false;
-}
-
-/* FINAL – sıralı yazı */
-function showFinal(){
-  card.style.display="none";
-  textEl.innerHTML="";
-  const lines=[
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
-    "<strong>HAYATIMIN ANLAMI 🤍</strong>",
-    "",
-    "<span class='signature'>Kaan’dan İclale</span>"
-  ];
-  let i=0;
-  (function type(){
-    if(i>=lines.length) return;
-    textEl.innerHTML+=lines[i]+"<br>";
-    i++; setTimeout(type,900);
-  })();
-}
-
-/* Balon */
-function createBalloon(){
-  let b=document.createElement("div");
-  b.className="balloon";
-  b.style.left=Math.random()*100+"vw";
-  b.innerHTML="🎈";
-  document.body.appendChild(b);
-  setTimeout(()=>b.remove(),7000);
-}
+/* Başlat */
+writeLine();
 </script>
 
 </body>
