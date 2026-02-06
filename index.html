@@ -16,30 +16,28 @@ body{
   overflow:hidden;
 }
 #container{
-  text-align:center;
-  color:#5a2a3a;
-  padding:30px;
-  z-index:5;
+  width:88%;
+  max-width:420px;
   background:#fffdf8;
+  padding:28px;
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.15);
-  width:85%;
-  max-width:420px;
-  min-height:260px;
+  text-align:center;
 }
 #text{
   font-size:24px;
   line-height:1.7;
-  min-height:220px;
+  min-height:260px;
+  color:#5a2a3a;
 }
 
 /* Yazı yazma efekti */
 .paper{
-  animation:ink 0.4s ease;
+  animation:ink .35s ease;
 }
 @keyframes ink{
-  from{opacity:0; transform:translateY(5px);}
-  to{opacity:1; transform:translateY(0);}
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 /* İmza */
@@ -47,6 +45,7 @@ body{
   font-family:'Pacifico',cursive;
   font-size:34px;
   color:#b03060;
+  margin-top:6px;
 }
 
 /* Balonlar – SADECE FINAL */
@@ -54,24 +53,23 @@ body{
   position:fixed;
   bottom:-60px;
   font-size:32px;
-  z-index:1;
   animation:balloonUp 6s linear forwards;
+  z-index:1;
 }
 @keyframes balloonUp{ to{ bottom:110%; } }
 
 /* Patlama */
 .explosion{
   position:fixed;
-  left:50%;
-  top:50%;
+  left:50%;top:50%;
   transform:translate(-50%,-50%);
   font-size:90px;
   animation:boom 1.2s ease-out forwards;
 }
 @keyframes boom{
-  0%{transform:translate(-50%,-50%) scale(.2);opacity:0;}
-  50%{opacity:1;}
-  100%{transform:translate(-50%,-50%) scale(1.6);opacity:0;}
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 }
 </style>
 </head>
@@ -85,8 +83,17 @@ body{
 <script>
 const textEl = document.getElementById("text");
 
+let stage = 0;
+
+/* AÇILIŞ METNİ */
+const introLines = [
+  "<strong>Koca Ayıdan Sana Bir Sürpriz Var 🎁</strong>",
+  "Sürprizi öğrenmek istiyorsan",
+  "<strong>ekrana dokun</strong>"
+];
+
 /* FINAL METİN */
-const lines=[
+const finalLines = [
   "Doğum Günün Kutlu Olsun <strong>Aşkım</strong> 💚",
   "İyi ki Varsın",
   "İyi ki Benimlesin",
@@ -97,24 +104,40 @@ const lines=[
   "Doğum günü sürprizi 🎂"
 ];
 
-let i=0;
+let i = 0;
 
-/* Yazı yazma efekti */
-function writeLine(){
-  if(i>=lines.length){
-    startBalloons();
-    setTimeout(explosion,3500);
-    return;
-  }
-  const div=document.createElement("div");
-  div.className="paper";
-  div.innerHTML=lines[i];
-  textEl.appendChild(div);
+/* Açılışı yaz */
+function writeIntro(){
+  if(i >= introLines.length) return;
+  const d = document.createElement("div");
+  d.className = "paper";
+  d.innerHTML = introLines[i];
+  textEl.appendChild(d);
   i++;
-  setTimeout(writeLine,850);
+  setTimeout(writeIntro, 700);
 }
 
-/* Balonlar SADECE FINAL */
+/* Final yaz */
+function writeFinal(){
+  textEl.innerHTML = "";
+  i = 0;
+  function next(){
+    if(i >= finalLines.length){
+      startBalloons();
+      setTimeout(explosion, 3500);
+      return;
+    }
+    const d = document.createElement("div");
+    d.className = "paper";
+    d.innerHTML = finalLines[i];
+    textEl.appendChild(d);
+    i++;
+    setTimeout(next, 850);
+  }
+  next();
+}
+
+/* Balonlar */
 function startBalloons(){
   for(let j=0;j<14;j++){
     setTimeout(()=>{
@@ -130,15 +153,23 @@ function startBalloons(){
 
 /* Patlama */
 function explosion(){
-  const boom=document.createElement("div");
-  boom.className="explosion";
-  boom.innerHTML="🎆";
-  document.body.appendChild(boom);
-  setTimeout(()=>boom.remove(),1200);
+  const e=document.createElement("div");
+  e.className="explosion";
+  e.innerHTML="🎆";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1200);
 }
 
+/* TIKLAMA */
+document.body.addEventListener("click",()=>{
+  if(stage === 0){
+    stage = 1;
+    writeFinal();
+  }
+});
+
 /* Başlat */
-writeLine();
+writeIntro();
 </script>
 
 </body>
