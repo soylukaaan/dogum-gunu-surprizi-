@@ -15,40 +15,76 @@ body{
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
+
 #container{
-  width:88%;
-  max-width:420px;
+  width:88%;max-width:420px;
   background:#fffdf8;
-  padding:28px;
+  padding:26px;
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,.15);
   text-align:center;
+  z-index:5;
 }
+
 #text{
   font-size:24px;
   line-height:1.7;
-  min-height:260px;
+  min-height:240px;
   color:#5a2a3a;
 }
 
-/* Yazı yazma efekti */
-.paper{
-  animation:ink .35s ease;
-}
+/* Yazı efekti */
+.paper{animation:ink .35s ease}
 @keyframes ink{
   from{opacity:0;transform:translateY(6px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-/* İmza */
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:34px;
-  color:#b03060;
-  margin-top:6px;
+/* Kedi */
+#cat{
+  position:fixed;
+  bottom:10%;
+  left:-40%;
+  display:none;
+  z-index:6;
+  animation:catIn 1.5s forwards;
 }
+#cat img{width:140px;}
+@keyframes catIn{to{left:12%;}}
 
-/* Balonlar – SADECE FINAL */
+/* Pasta */
+#cake{
+  position:fixed;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  font-size:150px;
+  z-index:6;
+}
+.off{filter:grayscale(100%);opacity:.6}
+
+/* Geri sayım */
+.count{font-size:70px;font-weight:bold}
+
+/* Mektup */
+#card{
+  position:fixed;
+  top:-260px;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  background:#fff;
+  padding:26px 32px;
+  border-radius:20px;
+  font-size:30px;
+  box-shadow:0 10px 26px rgba(0,0,0,.25);
+  z-index:7;
+  animation:cardDown 1.8s ease-out forwards;
+}
+@keyframes cardDown{to{top:28%;}}
+
+/* Balonlar (SADECE FINAL) */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -56,7 +92,14 @@ body{
   animation:balloonUp 6s linear forwards;
   z-index:1;
 }
-@keyframes balloonUp{ to{ bottom:110%; } }
+@keyframes balloonUp{to{bottom:110%;}}
+
+/* İmza */
+.signature{
+  font-family:'Pacifico',cursive;
+  font-size:34px;
+  color:#b03060;
+}
 
 /* Patlama */
 .explosion{
@@ -76,24 +119,39 @@ body{
 
 <body>
 
+<div id="cat">
+  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
+</div>
+
+<div id="cake">🎂</div>
+
+<div id="card">
+  <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
+  Zarfı açmak için<br>
+  <strong>ekrana dokun</strong>
+</div>
+
 <div id="container">
   <div id="text"></div>
 </div>
 
 <script>
-const textEl = document.getElementById("text");
+const textEl=document.getElementById("text");
+const cat=document.getElementById("cat");
+const cake=document.getElementById("cake");
+const card=document.getElementById("card");
 
-let stage = 0;
+let stage=0,lock=false;
 
-/* AÇILIŞ METNİ */
-const introLines = [
+/* AÇILIŞ */
+const intro=[
   "<strong>Koca Ayıdan Sana Bir Sürpriz Var 🎁</strong>",
   "Sürprizi öğrenmek istiyorsan",
   "<strong>ekrana dokun</strong>"
 ];
 
 /* FINAL METİN */
-const finalLines = [
+const finalText=[
   "Doğum Günün Kutlu Olsun <strong>Aşkım</strong> 💚",
   "İyi ki Varsın",
   "İyi ki Benimlesin",
@@ -104,37 +162,98 @@ const finalLines = [
   "Doğum günü sürprizi 🎂"
 ];
 
-let i = 0;
+let i=0;
 
-/* Açılışı yaz */
-function writeIntro(){
-  if(i >= introLines.length) return;
-  const d = document.createElement("div");
-  d.className = "paper";
-  d.innerHTML = introLines[i];
+/* Yazı yaz */
+function write(arr,delay,cb){
+  if(i>=arr.length){cb&&cb();return;}
+  const d=document.createElement("div");
+  d.className="paper";
+  d.innerHTML=arr[i];
   textEl.appendChild(d);
   i++;
-  setTimeout(writeIntro, 700);
+  setTimeout(()=>write(arr,delay,cb),delay);
 }
 
-/* Final yaz */
-function writeFinal(){
-  textEl.innerHTML = "";
-  i = 0;
-  function next(){
-    if(i >= finalLines.length){
-      startBalloons();
-      setTimeout(explosion, 3500);
-      return;
-    }
-    const d = document.createElement("div");
-    d.className = "paper";
-    d.innerHTML = finalLines[i];
-    textEl.appendChild(d);
-    i++;
-    setTimeout(next, 850);
+/* Açılışı başlat */
+write(intro,700);
+
+/* TIKLAMA AKIŞI */
+document.body.addEventListener("click",()=>{
+  if(lock) return;
+
+  // Açılıştan sonra
+  if(stage===0){
+    stage=1;lock=true;
+    startCat();
   }
-  next();
+  // Üfleme
+  else if(stage===3){
+    stage=4;lock=true;
+    blowCake();
+  }
+  // Karttan finale
+  else if(stage===6){
+    stage=7;lock=true;
+    showFinal();
+  }
+});
+
+/* 1️⃣ Kedi gelir */
+function startCat(){
+  textEl.innerHTML="";
+  cat.style.display="block";
+  setTimeout(()=>{
+    cake.style.display="block";      // pasta gelir
+    setTimeout(()=>{
+      cat.style.display="none";      // kedi gider
+      textEl.innerHTML="Üflemeden önce dilek tut ✨<br>";
+      startCountdown(8);
+    },1200);
+  },1200);
+}
+
+/* 2️⃣ 8 → 1 geri sayım (TEK SAYI) */
+function startCountdown(n){
+  stage=2;
+  textEl.innerHTML="Üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
+  if(n>1){
+    setTimeout(()=>startCountdown(n-1),1000);
+  }else{
+    setTimeout(()=>{
+      textEl.innerHTML="Pastayı üfle 🎂<br><strong>üflemek için ekrana dokun</strong>";
+      stage=3;lock=false;
+    },1000);
+  }
+}
+
+/* 3️⃣ Üfleme */
+function blowCake(){
+  cake.classList.add("off"); // mumlar söner
+  setTimeout(()=>cat.style.display="block",2000);
+  setTimeout(()=>{
+    cat.style.display="none";
+    cake.style.display="none";
+    textEl.innerHTML="";
+    showLetter();
+  },3800);
+}
+
+/* 4️⃣ Mektup */
+function showLetter(){
+  card.style.display="block";
+  stage=6;lock=false;
+}
+
+/* 5️⃣ Final */
+function showFinal(){
+  card.style.display="none";
+  textEl.innerHTML="";
+  i=0;
+  write(finalText,850,()=>{
+    startBalloons();
+    setTimeout(explosion,3500);
+  });
 }
 
 /* Balonlar */
@@ -159,17 +278,6 @@ function explosion(){
   document.body.appendChild(e);
   setTimeout(()=>e.remove(),1200);
 }
-
-/* TIKLAMA */
-document.body.addEventListener("click",()=>{
-  if(stage === 0){
-    stage = 1;
-    writeFinal();
-  }
-});
-
-/* Başlat */
-writeIntro();
 </script>
 
 </body>
