@@ -21,28 +21,35 @@ body{
 #text{
   text-align:center;
   font-size:26px;
-  line-height:1.8;
+  line-height:1.9;
   color:#5a2a3a;
   z-index:5;
 }
 
+/* yazı efekti */
 .paper{
-  animation:write .4s ease;
+  animation:write .6s ease;
 }
 @keyframes write{
-  from{opacity:0;transform:translateY(8px)}
+  from{opacity:0;transform:translateY(10px)}
   to{opacity:1}
 }
 
-/* Kedi + pasta (YAVAŞLATILDI) */
+/* 🤍 kalp görünürlük */
+.white-heart{
+  font-size:28px;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
+}
+
+/* Kedi + pasta (DAHA YAVAŞ) */
 #carry{
   position:fixed;
   bottom:10%;
-  left:-60%;
+  left:-70%;
   display:none;
   align-items:center;
-  gap:12px;
-  animation:carryIn 2.6s forwards; /* ← YAVAŞ */
+  gap:14px;
+  animation:carryIn 3.6s forwards;
   z-index:6;
 }
 #carry img{width:120px}
@@ -67,33 +74,33 @@ body{
 /* Mektup */
 #card{
   position:fixed;
-  top:-260px;
+  top:-300px;
   left:50%;
   transform:translateX(-50%);
   display:none;
   background:white;
-  padding:26px 32px;
-  border-radius:20px;
+  padding:28px 36px;
+  border-radius:22px;
   font-size:30px;
-  animation:drop 1.6s ease forwards;
+  animation:drop 2.2s ease forwards;
   z-index:7;
 }
 @keyframes drop{to{top:28%}}
+
+.signature{
+  font-family:'Pacifico',cursive;
+  font-size:36px;
+  color:#b03060;
+}
 
 /* Balon */
 .balloon{
   position:fixed;
   bottom:-60px;
   font-size:32px;
-  animation:fly 6s linear forwards;
+  animation:fly 8s linear forwards;
 }
 @keyframes fly{to{bottom:110%}}
-
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:34px;
-  color:#b03060;
-}
 
 /* Patlama */
 .explosion{
@@ -101,7 +108,7 @@ body{
   left:50%;top:50%;
   transform:translate(-50%,-50%);
   font-size:90px;
-  animation:boom 1.2s ease-out forwards;
+  animation:boom 1.6s ease-out forwards;
 }
 @keyframes boom{
   0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
@@ -135,7 +142,7 @@ const card=document.getElementById("card");
 
 let stage=0, lock=false;
 
-// Açılış (SADECE YAZI)
+// Açılış (yavaş)
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -148,7 +155,7 @@ intro.forEach((l,i)=>{
     d.className="paper";
     d.innerHTML=l;
     text.appendChild(d);
-  },700*i);
+  },1200*i);
 });
 
 document.body.onclick=()=>{
@@ -162,19 +169,19 @@ document.body.onclick=()=>{
       carry.style.display="none";
       cake.style.display="block";
       text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
-      setTimeout(()=>count(8),800);
-    },2600);
+      setTimeout(()=>count(8),1400);
+    },3600);
   }
   else if(stage===3){
     stage=4; lock=true;
     cake.classList.add("off");
-    setTimeout(()=>carry.style.display="flex",600);
+    setTimeout(()=>carry.style.display="flex",1200);
     setTimeout(()=>{
       carry.style.display="none";
       cake.style.display="none";
       text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
-    },2000);
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2600);
+    },2600);
   }
   else if(stage===6){
     stage=7; lock=true;
@@ -186,11 +193,11 @@ document.body.onclick=()=>{
 function count(n){
   stage=2;
   text.innerHTML="Pastayı üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1) setTimeout(()=>count(n-1),1000);
+  if(n>1) setTimeout(()=>count(n-1),1400);
   else setTimeout(()=>{
     text.innerHTML="Pastayı üflemek için ekrana dokun";
     stage=3; lock=false;
-  },1000);
+  },1600);
 }
 
 function final(){
@@ -199,7 +206,7 @@ function final(){
     "İyi ki Varsın",
     "İyi ki Benimlesin",
     "",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun 🤍",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
     "",
     "<span class='signature'>Kaan’dan İclale</span>",
     "Doğum günü sürprizi 🎂"
@@ -208,14 +215,14 @@ function final(){
   (function write(){
     if(i>=lines.length){
       balloons();
-      setTimeout(explode,3000);
+      setTimeout(explode,4000);
       return;
     }
     const d=document.createElement("div");
     d.className="paper";
     d.innerHTML=lines[i++];
     text.appendChild(d);
-    setTimeout(write,900);
+    setTimeout(write,1200);
   })();
 }
 
@@ -226,8 +233,8 @@ function balloons(){
     b.style.left=Math.random()*100+"vw";
     b.textContent="🎈";
     document.body.appendChild(b);
-    setTimeout(()=>b.remove(),6000);
-  },500);
+    setTimeout(()=>b.remove(),8000);
+  },900);
 }
 
 function explode(){
@@ -235,7 +242,7 @@ function explode(){
   e.className="explosion";
   e.textContent="🎆";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1200);
+  setTimeout(()=>e.remove(),1600);
 }
 </script>
 
