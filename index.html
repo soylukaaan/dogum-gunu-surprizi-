@@ -34,7 +34,7 @@ body{
   to{opacity:1}
 }
 
-/* Kedi + pasta */
+/* Kedi + pasta (YAVAŞLATILDI) */
 #carry{
   position:fixed;
   bottom:10%;
@@ -42,7 +42,7 @@ body{
   display:none;
   align-items:center;
   gap:12px;
-  animation:carryIn 1.6s forwards;
+  animation:carryIn 2.6s forwards; /* ← YAVAŞ */
   z-index:6;
 }
 #carry img{width:120px}
@@ -135,7 +135,7 @@ const card=document.getElementById("card");
 
 let stage=0, lock=false;
 
-// Açılış – SADECE YAZI
+// Açılış (SADECE YAZI)
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -163,7 +163,7 @@ document.body.onclick=()=>{
       cake.style.display="block";
       text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
       setTimeout(()=>count(8),800);
-    },1800);
+    },2600);
   }
   else if(stage===3){
     stage=4; lock=true;
@@ -199,7 +199,7 @@ function final(){
     "İyi ki Varsın",
     "İyi ki Benimlesin",
     "",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun 🤍",
     "",
     "<span class='signature'>Kaan’dan İclale</span>",
     "Doğum günü sürprizi 🎂"
