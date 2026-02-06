@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Doğum Günü Sürprizi 🎂</title>
+<title>Doğum Günü 🎂</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
@@ -19,7 +19,6 @@ body{
   overflow:hidden;
 }
 
-/* ORTA METİN */
 #container{
   text-align:center;
   color:#b03060;
@@ -30,7 +29,42 @@ body{
 #text{
   font-size:26px;
   line-height:1.6;
-  min-height:260px;
+  min-height:220px;
+}
+
+/* KEDİ */
+#cat{
+  position:fixed;
+  bottom:10%;
+  left:-40%;
+  display:none;
+  animation:catIn 3s forwards;
+  z-index:6;
+}
+
+#cat img{
+  width:140px;
+}
+
+@keyframes catIn{
+  to{ left:10%; }
+}
+
+/* PASTA */
+#cake{
+  position:fixed;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  font-size:120px;
+  z-index:6;
+}
+
+/* MUM SÖNÜK */
+.off{
+  filter:grayscale(100%);
+  opacity:0.6;
 }
 
 /* GERİ SAYIM */
@@ -39,157 +73,100 @@ body{
   font-weight:bold;
 }
 
-/* KEDİ + PASTA */
-#catWrap{
-  position:fixed;
-  bottom:-200px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  animation:catUp 3s ease-out forwards;
-  z-index:6;
-}
-
-#catWrap img{
-  width:160px;
-}
-
-@keyframes catUp{
-  to{ bottom:20%; }
-}
-
-/* KART */
-#card{
-  position:fixed;
-  top:-200px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  font-size:22px;
-  background:#fff;
-  padding:16px 22px;
-  border-radius:16px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.2);
-  animation:cardDown 2s ease-out forwards;
-  z-index:6;
-}
-
-@keyframes cardDown{
-  to{ top:30%; }
-}
-
-/* BALONLAR */
+/* BALON */
 .balloon{
   position:fixed;
-  bottom:-80px;
+  bottom:-60px;
   font-size:30px;
-  animation:flyBalloon 6s linear forwards;
+  animation:balloonUp 6s linear forwards;
   z-index:1;
 }
 
-@keyframes flyBalloon{
+@keyframes balloonUp{
   to{ bottom:110%; }
 }
-
-/* VURGULU YAZILAR */
-.big{
-  font-size:32px;
-  font-weight:bold;
-}
-
-.green{ color:#2ecc71; }
 </style>
 </head>
 
 <body>
 
-<!-- KEDİ + PASTA -->
-<div id="catWrap">
+<!-- KEDİ -->
+<div id="cat">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  🎂
 </div>
 
-<!-- ORTA METİN -->
+<!-- PASTA -->
+<div id="cake">🎂</div>
+
 <div id="container">
   <div id="text">
     <strong>Koca Ayıdan Sana Bir Sürpriz Var 🎁</strong><br>
     Sürprizi öğrenmek istiyorsan<br>
-    <strong>ekrana dokun 💗</strong>
+    <strong>ekrana dokun</strong>
   </div>
 </div>
 
-<!-- KART -->
-<div id="card">
-  İyi ki doğdun 🎂<br>
-  Zarfı açmak için dokun
-</div>
-
-<!-- MÜZİK -->
-<audio id="music">
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_6e0b7e2a91.mp3" type="audio/mpeg">
-</audio>
-
 <script>
 const textEl = document.getElementById("text");
-const cat = document.getElementById("catWrap");
-const card = document.getElementById("card");
-const music = document.getElementById("music");
+const cat = document.getElementById("cat");
+const cake = document.getElementById("cake");
 
 let stage = 0;
 let lock = false;
 
-/* TIKLAMA */
 document.body.addEventListener("click",()=>{
   if(lock) return;
 
-  // AÇILIŞ → GERİ SAYIM
+  // Açılış → kedi gelsin
   if(stage === 0){
     stage = 1;
     lock = true;
-    startCountdown(10);
+    showCat();
   }
 
-  // KART → FINAL
+  // Pastayı üfle
   else if(stage === 3){
     stage = 4;
     lock = true;
-    card.style.display="none";
-    textEl.innerHTML="";
-    startBalloons();
-    typeFinal();
+    blowCake();
   }
 });
 
-/* 10'DAN GERİ SAYIM */
-function startCountdown(n){
-  textEl.className="count";
-  textEl.innerHTML = n;
-
-  if(n === 10){
-    music.volume = 0.4;
-    music.play().catch(()=>{});
-  }
-
-  if(n>0){
-    setTimeout(()=>startCountdown(n-1),1000);
-  }else{
-    textEl.className="";
-    textEl.innerHTML="Üflemeden önce dilek tut ✨";
-    setTimeout(showCat,1500);
-  }
-}
-
-/* KEDİ + PASTA */
 function showCat(){
   cat.style.display="block";
+  cake.style.display="block";
+
   setTimeout(()=>{
-    card.style.display="block";
-    stage = 3;
-    lock = false;
+    cat.style.display="none"; // kedi gider
+    textEl.innerHTML="Üflemeden önce dilek tut ✨";
+    startCountdown(8);
   },3500);
 }
 
-/* BALONLAR */
+function startCountdown(n){
+  stage = 2;
+  textEl.className="count";
+  textEl.innerHTML=n;
+
+  if(n>1){
+    setTimeout(()=>startCountdown(n-1),1000);
+  }else{
+    setTimeout(()=>{
+      textEl.className="";
+      textEl.innerHTML="Pastayı üfle 🎂<br><strong>üflemek için ekrana dokun</strong>";
+      stage = 3;
+      lock = false;
+    },1000);
+  }
+}
+
+function blowCake(){
+  cake.classList.add("off"); // mumlar söndü
+  startBalloons();
+  textEl.innerHTML="";
+  setTimeout(showFinalText,1500);
+}
+
 function startBalloons(){
   for(let i=0;i<10;i++){
     let b=document.createElement("div");
@@ -201,13 +178,12 @@ function startBalloons(){
   }
 }
 
-/* FINAL YAZI */
 const finalLines=[
-  "Doğum Günün Kutlu Olsun <span class='big'>Aşkım</span> 💚",
+  "Doğum Günün Kutlu Olsun Aşkım 💚",
   "İyi ki Varsın",
   "İyi ki Benimlesin",
   "Nice Mutlu Senelerimiz Olsun",
-  "<span class='big'>HAYATIMIN ANLAMI 🤍</span>",
+  "HAYATIMIN ANLAMI 🤍",
   "",
   "Kaan’dan İclale",
   "Doğum günü sürprizi 🎁"
@@ -215,13 +191,14 @@ const finalLines=[
 
 let l=0;
 
-function typeFinal(){
+function showFinalText(){
   if(l>=finalLines.length) return;
   textEl.innerHTML += finalLines[l]+"<br>";
   l++;
-  setTimeout(typeFinal,700);
+  setTimeout(showFinalText,700);
 }
 </script>
 
 </body>
 </html>
+
