@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Doğum Günü Sürprizi 🎂</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;
@@ -13,51 +15,62 @@ body{
   justify-content:center;
   align-items:center;
   background:linear-gradient(135deg,#ffd1dc,#ffb6c1);
-  font-family: "Comic Sans MS", cursive;
+  font-family: Arial, sans-serif;
   text-align:center;
   overflow:hidden;
 }
 
-#screen{
-  font-size:26px;
-  color:#5a2a3a;
-  cursor:pointer;
+#text{
+  font-size:30px;
+  color:#4a1f2d;
+  padding:20px;
 }
 
-.hidden{ display:none; }
+.big{ font-size:42px; }
+.huge{ font-size:100px; }
 
-.big{
-  font-size:40px;
-  margin:20px 0;
-}
-
-.cat, .cake, .letter{
-  font-size:80px;
-  margin:20px 0;
+.signature{
+  font-family:'Pacifico',cursive;
+  font-size:46px;
+  margin-top:25px;
 }
 
 .count{
-  font-size:50px;
+  font-size:70px;
+  font-weight:bold;
 }
 
 .balloon{
-  position:absolute;
+  position:fixed;
   bottom:-100px;
   font-size:40px;
-  animation: fly 6s linear infinite;
+  animation:fly 7s linear infinite;
+}
+@keyframes fly{
+  to{ transform:translateY(-120vh); }
 }
 
-@keyframes fly{
-  from{ transform:translateY(0); }
-  to{ transform:translateY(-120vh); }
+.explosion{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:100px;
+  animation:boom 1.6s;
+}
+@keyframes boom{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 }
 </style>
 </head>
 
 <body>
 
-<div id="screen">
-  <div id="text">Koca Ayıdan Sana Bir Sürpriz Var 🎁<br><br>Ekrana dokun</div>
+<div id="text">
+  Koca Ayıdan Sana Bir Sürpriz Var 🎁<br><br>
+  <b>Ekrana dokun</b>
 </div>
 
 <audio id="music">
@@ -65,74 +78,98 @@ body{
 </audio>
 
 <script>
-const screen = document.getElementById("screen");
 const text = document.getElementById("text");
 const music = document.getElementById("music");
 
-let step = 0;
+let stage = 0;
 
-screen.addEventListener("click", () => {
-  if(step === 0){
-    music.play(); // 🎵 MÜZİK BURADA BAŞLAR
-    text.innerHTML = "🐱🎂";
-    step = 1;
+document.body.onclick = () => {
+
+  /* 1️⃣ İlk dokunuş */
+  if(stage === 0){
+    music.volume = 0.7;
+    music.play().catch(()=>{});
+
+    text.innerHTML = "<div class='huge'>🐱🎂</div>";
+    stage = 1;
 
     setTimeout(()=>{
-      text.innerHTML = "🎂";
-    },2000);
+      text.innerHTML = "<div class='huge'>🎂</div>";
+    },2500);
 
-    setTimeout(startCount,3500);
+    setTimeout(()=>{
+      text.innerHTML = "Pastayı üflemeden önce dilek tut ✨<br><br><span class='count'>8</span>";
+      startCount();
+    },4000);
   }
-  else if(step === 2){
-    text.innerHTML = "💨 Mumları üfledin!";
+
+  /* 3️⃣ Üfleme */
+  else if(stage === 3){
+    text.innerHTML = "💨 Mumlar söndü!";
+    stage = 4;
+
+    setTimeout(()=>{
+      text.innerHTML = "<div class='huge'>🐱🎂</div>";
+    },1200);
+
     setTimeout(()=>{
       text.innerHTML = "";
       setTimeout(dropLetter,2000);
-    },1500);
+    },3000);
   }
-});
+
+  /* 5️⃣ Final yazı */
+  else if(stage === 5){
+    showFinal();
+  }
+};
 
 function startCount(){
-  step = 2;
   let n = 8;
-  text.innerHTML = "Üflemeden önce dilek tut 💫<br><br><span class='count'>8</span>";
+  stage = 2;
 
   const interval = setInterval(()=>{
     n--;
     if(n === 0){
       clearInterval(interval);
-      text.innerHTML = "Pastayı üflemek için ekrana dokun 💨";
+      text.innerHTML = "Pastayı üflemek için ekrana dokun";
+      stage = 3;
     }else{
       document.querySelector(".count").innerText = n;
     }
-  },1000);
+  },1200);
 }
 
 function dropLetter(){
-  text.innerHTML = "✉️";
-  setTimeout(showFinal,1500);
+  text.innerHTML = "<div class='huge'>✉️</div><br>Ekrana dokun";
+  stage = 5;
 }
 
 function showFinal(){
   text.innerHTML = `
-  Doğum Günün Kutlu Olsun Aşkım 💚<br><br>
-  İyi ki Varsın<br>
-  İyi ki Benimlesin<br><br>
-  Birlikte Sağlıkla ve Mutlulukla Geçecek<br>
-  Nice Senelerimiz Olsun 🤍<br><br>
-  <span class="big">Kaan’dan İclale</span><br>
-  Doğum günü sürprizi 🎂
+    <div class="big">Doğum Günün Kutlu Olsun Aşkım 💚</div><br>
+    İyi ki Varsın<br>
+    İyi ki Benimlesin<br><br>
+    Birlikte Sağlıkla ve Mutlulukla Geçecek<br>
+    Nice Senelerimiz Olsun 🤍<br><br>
+    <div class="signature">Kaan’dan İclale</div>
+    Doğum günü sürprizi 🎂
   `;
 
   for(let i=0;i<15;i++){
-    const b = document.createElement("div");
-    b.className = "balloon";
-    b.style.left = Math.random()*100+"vw";
-    b.innerText = "🎈";
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*100+"vw";
+    b.innerText="🎈";
     document.body.appendChild(b);
   }
 
-  setTimeout(()=>alert("🎆🎉"),3000);
+  setTimeout(()=>{
+    const e=document.createElement("div");
+    e.className="explosion";
+    e.innerText="🎆";
+    document.body.appendChild(e);
+  },3500);
 }
 </script>
 
