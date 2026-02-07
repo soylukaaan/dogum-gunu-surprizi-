@@ -2,279 +2,137 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Doğum Günü Sürprizi 🎂</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+<title>Doğum Günü Sürprizi 🎂</title>
 
 <style>
 body{
-  margin:0;height:100vh;
-  background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
-  font-family:'Comic Neue',cursive;
-  overflow:hidden;
+  margin:0;
+  height:100vh;
   display:flex;
-  align-items:center;
   justify-content:center;
-}
-
-#text{
-  text-align:center;
-  font-size:26px;
-  line-height:1.9;
-  color:#5a2a3a;
-  z-index:5;
-}
-
-.paper{animation:write .6s ease}
-@keyframes write{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1}
-}
-
-.white-heart{
-  font-size:28px;
-  filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
-}
-
-/* 🎵 MÜZİK BUTONU */
-#musicBtn{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#ff5fa2;
-  color:white;
-  padding:18px 34px;
-  border-radius:40px;
-  font-size:24px;
-  z-index:9999;
-  box-shadow:0 8px 22px rgba(0,0,0,.35);
-}
-
-/* Kedi + pasta */
-#carry{
-  position:fixed;
-  bottom:10%;
-  left:-70%;
-  display:none;
   align-items:center;
-  gap:14px;
-  animation:carryIn 3.8s forwards;
-  z-index:6;
-}
-#carry img{width:120px}
-#carry .cake{font-size:120px}
-@keyframes carryIn{
-  to{left:50%;transform:translateX(-50%)}
+  background:linear-gradient(135deg,#ffd1dc,#ffb6c1);
+  font-family: "Comic Sans MS", cursive;
+  text-align:center;
+  overflow:hidden;
 }
 
-#cakeSolo{
-  position:fixed;
-  bottom:10%;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  font-size:150px;
-  z-index:6;
-}
-.off{filter:grayscale(100%);opacity:.6}
-
-.count{font-size:70px;font-weight:bold}
-
-/* Mektup */
-#card{
-  position:fixed;
-  top:-320px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  background:white;
-  padding:28px 36px;
-  border-radius:22px;
-  font-size:30px;
-  animation:drop 2.4s ease forwards;
-  z-index:7;
-}
-@keyframes drop{to{top:28%}}
-
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
+#screen{
+  font-size:26px;
+  color:#5a2a3a;
+  cursor:pointer;
 }
 
-/* Balon */
+.hidden{ display:none; }
+
+.big{
+  font-size:40px;
+  margin:20px 0;
+}
+
+.cat, .cake, .letter{
+  font-size:80px;
+  margin:20px 0;
+}
+
+.count{
+  font-size:50px;
+}
+
 .balloon{
-  position:fixed;
-  bottom:-60px;
-  font-size:32px;
-  animation:fly 8s linear forwards;
+  position:absolute;
+  bottom:-100px;
+  font-size:40px;
+  animation: fly 6s linear infinite;
 }
-@keyframes fly{to{bottom:110%}}
 
-/* Patlama */
-.explosion{
-  position:fixed;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  font-size:90px;
-  animation:boom 1.6s ease-out forwards;
-}
-@keyframes boom{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
-  50%{opacity:1}
-  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
+@keyframes fly{
+  from{ transform:translateY(0); }
+  to{ transform:translateY(-120vh); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 MÜZİK -->
-<audio id="bgm" preload="auto" loop>
+<div id="screen">
+  <div id="text">Koca Ayıdan Sana Bir Sürpriz Var 🎁<br><br>Ekrana dokun</div>
+</div>
+
+<audio id="music">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Müzik Butonu -->
-<div id="musicBtn">🎵 Müziği Başlat</div>
-
-<!-- Kedi + pasta -->
-<div id="carry">
-  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <div class="cake">🎂</div>
-</div>
-<div id="cakeSolo">🎂</div>
-
-<!-- Mektup -->
-<div id="card">
-  <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
-  ekrana dokun
-</div>
-
-<div id="text"></div>
-
 <script>
-const text=document.getElementById("text");
-const carry=document.getElementById("carry");
-const cake=document.getElementById("cakeSolo");
-const card=document.getElementById("card");
-const music=document.getElementById("bgm");
-const musicBtn=document.getElementById("musicBtn");
+const screen = document.getElementById("screen");
+const text = document.getElementById("text");
+const music = document.getElementById("music");
 
-let stage=0, lock=false, musicReady=false;
+let step = 0;
 
-/* 🎵 MÜZİK BAŞLAT */
-musicBtn.onclick=(e)=>{
-  e.stopPropagation();
-  music.play().then(()=>{
-    music.volume=0.6;
-    musicBtn.style.display="none";
-    musicReady=true;
-    text.innerHTML="<div class='paper'>Devam etmek için ekrana dokun 👇</div>";
-  }).catch(()=>{});
-};
+screen.addEventListener("click", () => {
+  if(step === 0){
+    music.play(); // 🎵 MÜZİK BURADA BAŞLAR
+    text.innerHTML = "🐱🎂";
+    step = 1;
 
-/* Açılış */
-const intro=[
-  "Koca Ayıdan Sana Bir Sürpriz Var 🎁"
-];
-intro.forEach((l,i)=>setTimeout(()=>{
-  const d=document.createElement("div");
-  d.className="paper";
-  d.innerHTML=l;
-  text.appendChild(d);
-},800*i));
-
-document.body.onclick=()=>{
-  if(lock || !musicReady) return;
-
-  if(stage===0){
-    stage=1; lock=true;
-    text.innerHTML="";
-    carry.style.display="flex";
     setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="block";
-      text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
-      setTimeout(()=>count(8),1500);
-    },3800);
-  }
-  else if(stage===3){
-    stage=4; lock=true;
-    cake.classList.add("off");
-    setTimeout(()=>carry.style.display="flex",1400);
-    setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="none";
-      text.innerHTML="";
-      setTimeout(()=>{
-        card.style.display="block";
-        stage=6; lock=false;
-      },2600);
-    },2600);
-  }
-  else if(stage===6){
-    stage=7; lock=true;
-    card.style.display="none";
-    final();
-  }
-};
+      text.innerHTML = "🎂";
+    },2000);
 
-function count(n){
-  stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1){
-    setTimeout(()=>count(n-1),1500);
-  }else{
-    setTimeout(()=>{
-      text.innerHTML="Pastayı üflemek için ekrana dokun";
-      stage=3; lock=false;
-    },1700);
+    setTimeout(startCount,3500);
   }
-}
+  else if(step === 2){
+    text.innerHTML = "💨 Mumları üfledin!";
+    setTimeout(()=>{
+      text.innerHTML = "";
+      setTimeout(dropLetter,2000);
+    },1500);
+  }
+});
 
-function final(){
-  const lines=[
-    "Doğum Günün Kutlu Olsun Aşkım 💚",
-    "İyi ki Varsın",
-    "İyi ki Benimlesin",
-    "",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
-    "",
-    "<span class='signature'>Kaan’dan İclale</span>",
-    "Doğum günü sürprizi 🎂"
-  ];
-  let i=0;
-  (function write(){
-    if(i>=lines.length){
-      balloons();
-      setTimeout(explode,4200);
-      return;
+function startCount(){
+  step = 2;
+  let n = 8;
+  text.innerHTML = "Üflemeden önce dilek tut 💫<br><br><span class='count'>8</span>";
+
+  const interval = setInterval(()=>{
+    n--;
+    if(n === 0){
+      clearInterval(interval);
+      text.innerHTML = "Pastayı üflemek için ekrana dokun 💨";
+    }else{
+      document.querySelector(".count").innerText = n;
     }
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=lines[i++];
-    text.appendChild(d);
-    setTimeout(write,1300);
-  })();
+  },1000);
 }
 
-function balloons(){
-  setInterval(()=>{
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=Math.random()*100+"vw";
-    b.textContent="🎈";
-    document.body.appendChild(b);
-    setTimeout(()=>b.remove(),8000);
-  },900);
+function dropLetter(){
+  text.innerHTML = "✉️";
+  setTimeout(showFinal,1500);
 }
-function explode(){
-  const e=document.createElement("div");
-  e.className="explosion";
-  e.textContent="🎆";
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1600);
+
+function showFinal(){
+  text.innerHTML = `
+  Doğum Günün Kutlu Olsun Aşkım 💚<br><br>
+  İyi ki Varsın<br>
+  İyi ki Benimlesin<br><br>
+  Birlikte Sağlıkla ve Mutlulukla Geçecek<br>
+  Nice Senelerimiz Olsun 🤍<br><br>
+  <span class="big">Kaan’dan İclale</span><br>
+  Doğum günü sürprizi 🎂
+  `;
+
+  for(let i=0;i<15;i++){
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = Math.random()*100+"vw";
+    b.innerText = "🎈";
+    document.body.appendChild(b);
+  }
+
+  setTimeout(()=>alert("🎆🎉"),3000);
 }
 </script>
 
