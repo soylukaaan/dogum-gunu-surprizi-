@@ -5,111 +5,93 @@
 <title>Doğum Günü Sürprizi 🎂</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
-
 <style>
 body{
-  margin:0;height:100vh;
+  margin:0;
+  height:100vh;
   background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
-  font-family:'Comic Neue',cursive;
+  font-family: Arial, sans-serif;
   overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
 }
 
 #text{
-  text-align:center;
   font-size:28px;
-  line-height:1.9;
   color:#5a2a3a;
-  z-index:5;
+  line-height:1.8;
+  padding:20px;
 }
 
-/* yazı efekti */
-.paper{
-  animation:write .6s ease;
-}
-@keyframes write{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1}
-}
-
-/* 🤍 kalp */
-.white-heart{
-  font-size:28px;
-  filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
-}
-
-/* Kedi + pasta (DAHA BÜYÜK + YAVAŞ) */
+/* uçan kedi + pasta */
 #carry{
   position:fixed;
-  bottom:8%;
+  bottom:15%;
   left:-80%;
+  font-size:140px;
   display:none;
-  align-items:center;
-  gap:20px;
-  animation:carryIn 4s forwards;
-  z-index:6;
+  animation:flyIn 4s forwards;
 }
-#carry img{width:160px}
-#carry .cake{font-size:160px}
-
-@keyframes carryIn{
-  to{left:50%;transform:translateX(-50%)}
+@keyframes flyIn{
+  to{ left:50%; transform:translateX(-50%); }
 }
 
-#cakeSolo{
+/* pasta ortada */
+#cake{
   position:fixed;
-  bottom:8%;
+  bottom:15%;
   left:50%;
   transform:translateX(-50%);
+  font-size:160px;
   display:none;
-  font-size:180px;
-  z-index:6;
 }
-.off{filter:grayscale(100%);opacity:.6}
+.candleOff{
+  filter:grayscale(100%) brightness(0.8);
+}
 
-.count{font-size:70px;font-weight:bold}
+.count{
+  font-size:70px;
+  font-weight:bold;
+}
 
-/* Mektup */
-#card{
+/* mektup */
+#letter{
   position:fixed;
-  top:-300px;
+  top:-260px;
   left:50%;
   transform:translateX(-50%);
-  display:none;
   background:white;
-  padding:28px 36px;
+  padding:22px 28px;
   border-radius:22px;
-  font-size:30px;
-  animation:drop 2.2s ease forwards;
-  z-index:7;
+  font-size:26px;
+  display:none;
+  animation:drop 2.2s forwards;
 }
-@keyframes drop{to{top:28%}}
-
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
+@keyframes drop{
+  to{ top:28%; }
 }
 
-/* Balon */
+/* balon */
 .balloon{
   position:fixed;
-  bottom:-60px;
-  font-size:32px;
-  animation:fly 8s linear forwards;
+  bottom:-80px;
+  font-size:36px;
+  animation:rise 7s linear infinite;
 }
-@keyframes fly{to{bottom:110%}}
+@keyframes rise{
+  to{ bottom:120%; }
+}
 
-/* Küçük patlama */
+/* küçük patlama */
 .explosion{
   position:fixed;
-  left:50%;top:50%;
+  top:50%;
+  left:50%;
   transform:translate(-50%,-50%);
   font-size:70px;
-  animation:boom 1.4s ease-out forwards;
+  animation:boom 1.4s;
 }
 @keyframes boom{
   0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
@@ -121,147 +103,149 @@ body{
 
 <body>
 
-<!-- 🎵 MÜZİK -->
+<div id="carry">🐱🎂</div>
+<div id="cake">🎂</div>
+
+<div id="letter">
+  ✉️<br><br>
+  <b>İyi ki doğdun canım 🎂</b>
+</div>
+
+<div id="text">
+  <b>Koca Ayıdan Sana Bir Sürpriz Var 🎁</b><br><br>
+  Sürprizi görmek istiyorsan<br>
+  <b>ekrana dokun</b>
+</div>
+
 <audio id="music">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<div id="carry">
-  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <div class="cake">🎂</div>
-</div>
-
-<div id="cakeSolo">🎂</div>
-
-<div id="card">
-  <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
-  ekrana dokun
-</div>
-
-<div id="text"></div>
-
 <script>
-const text=document.getElementById("text");
-const carry=document.getElementById("carry");
-const cake=document.getElementById("cakeSolo");
-const card=document.getElementById("card");
-const music=document.getElementById("music");
+const text = document.getElementById("text");
+const carry = document.getElementById("carry");
+const cake = document.getElementById("cake");
+const letter = document.getElementById("letter");
+const music = document.getElementById("music");
 
-let stage=0, lock=false, musicStarted=false;
+let stage = 0;
+let lock = false;
 
-/* Açılış */
-const intro=[
-  "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
-  "Sürprizi öğrenmek istiyorsan",
-  "ekrana dokun"
-];
-
-intro.forEach((l,i)=>{
-  setTimeout(()=>{
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=l;
-    text.appendChild(d);
-  },1200*i);
-});
-
-document.body.onclick=()=>{
+document.body.onclick = () => {
   if(lock) return;
 
-  /* 🎵 İlk dokunuşta müzik */
-  if(!musicStarted){
-    music.volume=0.7;
+  /* 1️⃣ İlk dokunuş */
+  if(stage === 0){
+    music.volume = 0.7;
     music.play().catch(()=>{});
-    musicStarted=true;
-  }
 
-  if(stage===0){
-    stage=1; lock=true;
-    text.innerHTML="";
-    carry.style.display="flex";
+    text.innerHTML = "";
+    carry.style.display = "block";
+    lock = true;
 
+    /* kedi gider, pasta kalır */
     setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="block";
-      text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
-      setTimeout(()=>count(8),1500);
+      carry.style.display = "none";
+      cake.style.display = "block";
     },4000);
-  }
-  else if(stage===3){
-    stage=4; lock=true;
-    cake.classList.add("off");
 
-    setTimeout(()=>carry.style.display="flex",1200);
+    /* dilek tut */
     setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="none";
-      text.innerHTML="";
-      setTimeout(()=>{
-        card.style.display="block";
-        stage=6; lock=false;
-      },1800);
-    },2600);
+      text.innerHTML = "Pastayı üflemeden önce dilek tut ✨<br><span class='count'>8</span>";
+      startCount();
+      lock = false;
+    },4300);
+
+    stage = 1;
   }
-  else if(stage===6){
-    stage=7; lock=true;
-    card.style.display="none";
-    final();
+
+  /* 3️⃣ Üfleme (emoji yok, sadece mum söner efekti) */
+  else if(stage === 3){
+    lock = true;
+    cake.classList.add("candleOff");
+
+    setTimeout(()=>{
+      cake.style.display = "none";
+      setTimeout(dropLetter,1200);
+    },1200);
+
+    stage = 4;
+  }
+
+  /* 5️⃣ Final yazılar */
+  else if(stage === 5){
+    showFinal();
   }
 };
 
-function count(n){
-  stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1){
-    setTimeout(()=>count(n-1),1400);
-  }else{
-    setTimeout(()=>{
-      text.innerHTML="Pastayı üflemek için ekrana dokun";
-      stage=3; lock=false;
-    },1600);
-  }
+function startCount(){
+  let n = 8;
+  stage = 2;
+
+  const interval = setInterval(()=>{
+    n--;
+    if(n === 0){
+      clearInterval(interval);
+      text.innerHTML = "Pastayı üflemek için ekrana dokun";
+      stage = 3;
+    }else{
+      document.querySelector(".count").innerText = n;
+    }
+  },1200);
 }
 
-function final(){
-  const lines=[
+/* ✉️ mektup düşer */
+function dropLetter(){
+  text.innerHTML = "";
+  letter.style.display = "block";
+  stage = 5;
+}
+
+/* final yazılar */
+function showFinal(){
+  letter.style.display = "none";
+  text.innerHTML = "";
+
+  const lines = [
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
-    "",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
-    "",
-    "<span class='signature'>Kaan’dan İclale</span>",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek",
+    "Nice Senelerimiz Olsun 🤍",
+    "Kaan’dan İclale",
     "Doğum günü sürprizi 🎂"
   ];
-  let i=0;
-  (function write(){
-    if(i>=lines.length){
+
+  let i = 0;
+  const write = setInterval(()=>{
+    if(i >= lines.length){
+      clearInterval(write);
       balloons();
-      setTimeout(explode,3500);
+      setTimeout(explode,3000);
       return;
     }
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=lines[i++];
+    const d = document.createElement("div");
+    d.innerText = lines[i++];
     text.appendChild(d);
-    setTimeout(write,1200);
-  })();
+  },900);
 }
 
+/* balonlar */
 function balloons(){
   for(let i=0;i<12;i++){
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=Math.random()*100+"vw";
-    b.textContent="🎈";
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = Math.random()*100 + "vw";
+    b.innerText = "🎈";
     document.body.appendChild(b);
   }
 }
 
+/* küçük patlama */
 function explode(){
-  const e=document.createElement("div");
-  e.className="explosion";
-  e.textContent="🎆";
+  const e = document.createElement("div");
+  e.className = "explosion";
+  e.innerText = "🎆";
   document.body.appendChild(e);
 }
 </script>
