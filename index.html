@@ -5,53 +5,105 @@
 <title>Doğum Günü Sürprizi 🎂</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+
 <style>
 body{
   margin:0;height:100vh;
   background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
   font-family:'Comic Neue',cursive;
-  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-#text{font-size:26px;line-height:1.9;color:#5a2a3a;text-align:center;z-index:5}
+
+#text{
+  text-align:center;
+  font-size:26px;
+  line-height:1.9;
+  color:#5a2a3a;
+  z-index:5;
+}
+
 .paper{animation:write .6s ease}
-@keyframes write{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
-.white-heart{font-size:28px;filter:drop-shadow(0 0 4px rgba(0,0,0,.25))}
+@keyframes write{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1}
+}
+
+.white-heart{
+  font-size:28px;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
+}
 
 /* Kedi + pasta (yavaş) */
 #carry{
-  position:fixed;bottom:10%;left:-70%;
-  display:none;align-items:center;gap:14px;
-  animation:carryIn 3.6s forwards;z-index:6
+  position:fixed;
+  bottom:10%;
+  left:-70%;
+  display:none;
+  align-items:center;
+  gap:14px;
+  animation:carryIn 3.8s forwards;
+  z-index:6;
 }
 #carry img{width:120px}
 #carry .cake{font-size:120px}
-@keyframes carryIn{to{left:50%;transform:translateX(-50%)}}
+@keyframes carryIn{
+  to{left:50%;transform:translateX(-50%)}
+}
 
 #cakeSolo{
-  position:fixed;bottom:10%;left:50%;transform:translateX(-50%);
-  display:none;font-size:150px;z-index:6
+  position:fixed;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  font-size:150px;
+  z-index:6;
 }
 .off{filter:grayscale(100%);opacity:.6}
+
 .count{font-size:70px;font-weight:bold}
 
 /* Mektup */
 #card{
-  position:fixed;top:-300px;left:50%;transform:translateX(-50%);
-  display:none;background:#fff;padding:28px 36px;border-radius:22px;
-  font-size:30px;animation:drop 2.2s ease forwards;z-index:7
+  position:fixed;
+  top:-320px;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
+  background:white;
+  padding:28px 36px;
+  border-radius:22px;
+  font-size:30px;
+  animation:drop 2.4s ease forwards;
+  z-index:7;
 }
 @keyframes drop{to{top:28%}}
 
-.signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
+.signature{
+  font-family:'Pacifico',cursive;
+  font-size:36px;
+  color:#b03060;
+}
 
-/* Balon (sadece final) */
-.balloon{position:fixed;bottom:-60px;font-size:32px;animation:fly 8s linear forwards}
+/* Balon */
+.balloon{
+  position:fixed;
+  bottom:-60px;
+  font-size:32px;
+  animation:fly 8s linear forwards;
+}
 @keyframes fly{to{bottom:110%}}
 
 /* Patlama */
 .explosion{
-  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
-  font-size:90px;animation:boom 1.6s ease-out forwards
+  position:fixed;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-size:90px;
+  animation:boom 1.6s ease-out forwards;
 }
 @keyframes boom{
   0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
@@ -60,9 +112,10 @@ body{
 }
 </style>
 </head>
+
 <body>
 
-<!-- Müzik -->
+<!-- MÜZİK -->
 <audio id="bgm" preload="auto" loop>
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
@@ -91,58 +144,75 @@ const music=document.getElementById("bgm");
 
 let stage=0, lock=false, musicStarted=false;
 
-/* Açılış (sadece yazı) */
+/* Açılış */
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
-  "ekrana dokun"
+  "🔊 ses için ekrana dokun"
 ];
 intro.forEach((l,i)=>setTimeout(()=>{
-  const d=document.createElement("div");d.className="paper";d.innerHTML=l;text.appendChild(d);
-},1200*i));
+  const d=document.createElement("div");
+  d.className="paper";
+  d.innerHTML=l;
+  text.appendChild(d);
+},1300*i));
 
 document.body.onclick=()=>{
   if(lock) return;
 
-  // İlk dokunuşta müzik başlasın (fade-in)
+  /* MÜZİK – GARANTİLİ (iOS uyumlu) */
   if(!musicStarted){
-    music.volume=0; music.play();
-    let v=0; const f=setInterval(()=>{
-      v+=0.05; music.volume=Math.min(v,0.6);
-      if(v>=0.6) clearInterval(f);
-    },200);
-    musicStarted=true;
+    music.muted = true;
+    music.play().then(()=>{
+      music.muted = false;
+      music.volume = 0.6;
+    }).catch(()=>{});
+    musicStarted = true;
   }
 
   if(stage===0){
-    stage=1; lock=true; text.innerHTML="";
+    stage=1; lock=true;
+    text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
       carry.style.display="none";
       cake.style.display="block";
       text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
-      setTimeout(()=>count(8),1400);
-    },3600);
+      setTimeout(()=>count(8),1500);
+    },3800);
   }
   else if(stage===3){
     stage=4; lock=true;
     cake.classList.add("off");
-    setTimeout(()=>carry.style.display="flex",1200);
+    setTimeout(()=>carry.style.display="flex",1400);
     setTimeout(()=>{
-      carry.style.display="none"; cake.style.display="none"; text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2600);
+      carry.style.display="none";
+      cake.style.display="none";
+      text.innerHTML="";
+      setTimeout(()=>{
+        card.style.display="block";
+        stage=6; lock=false;
+      },2600);
     },2600);
   }
   else if(stage===6){
-    stage=7; lock=true; card.style.display="none"; final();
+    stage=7; lock=true;
+    card.style.display="none";
+    final();
   }
 };
 
 function count(n){
   stage=2;
   text.innerHTML="Pastayı üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1) setTimeout(()=>count(n-1),1400);
-  else setTimeout(()=>{text.innerHTML="Pastayı üflemek için ekrana dokun";stage=3;lock=false},1600);
+  if(n>1){
+    setTimeout(()=>count(n-1),1500);
+  }else{
+    setTimeout(()=>{
+      text.innerHTML="Pastayı üflemek için ekrana dokun";
+      stage=3; lock=false;
+    },1700);
+  }
 }
 
 function final(){
@@ -158,23 +228,38 @@ function final(){
   ];
   let i=0;
   (function write(){
-    if(i>=lines.length){ balloons(); setTimeout(explode,4000); return; }
-    const d=document.createElement("div"); d.className="paper"; d.innerHTML=lines[i++]; text.appendChild(d);
-    setTimeout(write,1200);
+    if(i>=lines.length){
+      balloons();
+      setTimeout(explode,4200);
+      return;
+    }
+    const d=document.createElement("div");
+    d.className="paper";
+    d.innerHTML=lines[i++];
+    text.appendChild(d);
+    setTimeout(write,1300);
   })();
 }
 
 function balloons(){
   setInterval(()=>{
     const b=document.createElement("div");
-    b.className="balloon"; b.style.left=Math.random()*100+"vw"; b.textContent="🎈";
-    document.body.appendChild(b); setTimeout(()=>b.remove(),8000);
+    b.className="balloon";
+    b.style.left=Math.random()*100+"vw";
+    b.textContent="🎈";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),8000);
   },900);
 }
+
 function explode(){
-  const e=document.createElement("div"); e.className="explosion"; e.textContent="🎆";
-  document.body.appendChild(e); setTimeout(()=>e.remove(),1600);
+  const e=document.createElement("div");
+  e.className="explosion";
+  e.textContent="🎆";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1600);
 }
 </script>
+
 </body>
 </html>
