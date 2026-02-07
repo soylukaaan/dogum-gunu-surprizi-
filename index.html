@@ -120,6 +120,11 @@ body{
 
 <body>
 
+<!-- 🎵 SADECE MÜZİK EKLENDİ -->
+<audio id="music">
+  <source src="dogum-gunu.mp3" type="audio/mpeg">
+</audio>
+
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
   <div class="cake">🎂</div>
@@ -139,8 +144,9 @@ const text=document.getElementById("text");
 const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
+const music=document.getElementById("music");
 
-let stage=0, lock=false;
+let stage=0, lock=false, musicStarted=false;
 
 // Açılış (yavaş)
 const intro=[
@@ -160,6 +166,13 @@ intro.forEach((l,i)=>{
 
 document.body.onclick=()=>{
   if(lock) return;
+
+  /* 🎵 SADECE BU EKLENDİ */
+  if(!musicStarted){
+    music.volume = 0.6;
+    music.play().catch(()=>{});
+    musicStarted = true;
+  }
 
   if(stage===0){
     stage=1; lock=true;
