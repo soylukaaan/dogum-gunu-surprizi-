@@ -12,9 +12,7 @@ body{
   background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
   font-family:'Comic Neue',cursive;
   overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:flex;align-items:center;justify-content:center;
 }
 
 #text{
@@ -36,7 +34,22 @@ body{
   filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
 }
 
-/* Kedi + pasta (yavaş) */
+/* 🎵 Müzik butonu */
+#musicBtn{
+  position:fixed;
+  bottom:18%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ff5fa2;
+  color:white;
+  padding:16px 28px;
+  border-radius:30px;
+  font-size:22px;
+  z-index:10;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
+/* Kedi + pasta */
 #carry{
   position:fixed;
   bottom:10%;
@@ -115,19 +128,18 @@ body{
 
 <body>
 
-<!-- MÜZİK -->
 <audio id="bgm" preload="auto" loop>
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Kedi + pasta -->
+<div id="musicBtn">🎵 Müziği Başlat</div>
+
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
   <div class="cake">🎂</div>
 </div>
 <div id="cakeSolo">🎂</div>
 
-<!-- Mektup -->
 <div id="card">
   <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
   ekrana dokun
@@ -141,14 +153,25 @@ const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
 const music=document.getElementById("bgm");
+const musicBtn=document.getElementById("musicBtn");
 
 let stage=0, lock=false, musicStarted=false;
+
+/* Müzik butonu */
+musicBtn.onclick=(e)=>{
+  e.stopPropagation();
+  music.play().then(()=>{
+    music.volume=0.6;
+    musicBtn.style.display="none";
+    musicStarted=true;
+  }).catch(()=>{});
+};
 
 /* Açılış */
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
-  "🔊 ses için ekrana dokun"
+  "ekrana dokun"
 ];
 intro.forEach((l,i)=>setTimeout(()=>{
   const d=document.createElement("div");
@@ -159,16 +182,6 @@ intro.forEach((l,i)=>setTimeout(()=>{
 
 document.body.onclick=()=>{
   if(lock) return;
-
-  /* MÜZİK – GARANTİLİ (iOS uyumlu) */
-  if(!musicStarted){
-    music.muted = true;
-    music.play().then(()=>{
-      music.muted = false;
-      music.volume = 0.6;
-    }).catch(()=>{});
-    musicStarted = true;
-  }
 
   if(stage===0){
     stage=1; lock=true;
@@ -251,7 +264,6 @@ function balloons(){
     setTimeout(()=>b.remove(),8000);
   },900);
 }
-
 function explode(){
   const e=document.createElement("div");
   e.className="explosion";
