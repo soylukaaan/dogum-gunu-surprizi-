@@ -12,7 +12,9 @@ body{
   background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
   font-family:'Comic Neue',cursive;
   overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 #text{
@@ -34,19 +36,19 @@ body{
   filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
 }
 
-/* 🎵 Müzik butonu */
+/* 🎵 MÜZİK BUTONU */
 #musicBtn{
   position:fixed;
-  bottom:18%;
+  top:50%;
   left:50%;
-  transform:translateX(-50%);
+  transform:translate(-50%,-50%);
   background:#ff5fa2;
   color:white;
-  padding:16px 28px;
-  border-radius:30px;
-  font-size:22px;
-  z-index:10;
-  box-shadow:0 6px 18px rgba(0,0,0,.25);
+  padding:18px 34px;
+  border-radius:40px;
+  font-size:24px;
+  z-index:9999;
+  box-shadow:0 8px 22px rgba(0,0,0,.35);
 }
 
 /* Kedi + pasta */
@@ -128,18 +130,22 @@ body{
 
 <body>
 
+<!-- 🎵 MÜZİK -->
 <audio id="bgm" preload="auto" loop>
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
+<!-- Müzik Butonu -->
 <div id="musicBtn">🎵 Müziği Başlat</div>
 
+<!-- Kedi + pasta -->
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
   <div class="cake">🎂</div>
 </div>
 <div id="cakeSolo">🎂</div>
 
+<!-- Mektup -->
 <div id="card">
   <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
   ekrana dokun
@@ -155,33 +161,32 @@ const card=document.getElementById("card");
 const music=document.getElementById("bgm");
 const musicBtn=document.getElementById("musicBtn");
 
-let stage=0, lock=false, musicStarted=false;
+let stage=0, lock=false, musicReady=false;
 
-/* Müzik butonu */
+/* 🎵 MÜZİK BAŞLAT */
 musicBtn.onclick=(e)=>{
   e.stopPropagation();
   music.play().then(()=>{
     music.volume=0.6;
     musicBtn.style.display="none";
-    musicStarted=true;
+    musicReady=true;
+    text.innerHTML="<div class='paper'>Devam etmek için ekrana dokun 👇</div>";
   }).catch(()=>{});
 };
 
 /* Açılış */
 const intro=[
-  "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
-  "Sürprizi öğrenmek istiyorsan",
-  "ekrana dokun"
+  "Koca Ayıdan Sana Bir Sürpriz Var 🎁"
 ];
 intro.forEach((l,i)=>setTimeout(()=>{
   const d=document.createElement("div");
   d.className="paper";
   d.innerHTML=l;
   text.appendChild(d);
-},1300*i));
+},800*i));
 
 document.body.onclick=()=>{
-  if(lock) return;
+  if(lock || !musicReady) return;
 
   if(stage===0){
     stage=1; lock=true;
