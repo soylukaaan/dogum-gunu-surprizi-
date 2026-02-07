@@ -26,22 +26,11 @@ body{
   z-index:5;
 }
 
-/* yazı efekti */
-.paper{
-  animation:write .6s ease;
-}
-@keyframes write{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1}
-}
+.paper{animation:write .6s ease}
+@keyframes write{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
 
-/* 🤍 kalp görünürlük */
-.white-heart{
-  font-size:28px;
-  filter:drop-shadow(0 0 4px rgba(0,0,0,.25));
-}
+.white-heart{font-size:28px}
 
-/* Kedi + pasta (DAHA YAVAŞ) */
 #carry{
   position:fixed;
   bottom:10%;
@@ -54,9 +43,7 @@ body{
 }
 #carry img{width:120px}
 #carry .cake{font-size:120px}
-@keyframes carryIn{
-  to{left:50%;transform:translateX(-50%)}
-}
+@keyframes carryIn{to{left:50%;transform:translateX(-50%)}}
 
 #cakeSolo{
   position:fixed;
@@ -71,7 +58,6 @@ body{
 
 .count{font-size:70px;font-weight:bold}
 
-/* Mektup */
 #card{
   position:fixed;
   top:-300px;
@@ -87,13 +73,8 @@ body{
 }
 @keyframes drop{to{top:28%}}
 
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
-}
+.signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
 
-/* Balon */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -102,7 +83,6 @@ body{
 }
 @keyframes fly{to{bottom:110%}}
 
-/* Patlama */
 .explosion{
   position:fixed;
   left:50%;top:50%;
@@ -120,6 +100,10 @@ body{
 
 <body>
 
+<audio id="music" preload="auto">
+  <source src="dogum-gunu.mp3" type="audio/mpeg">
+</audio>
+
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
   <div class="cake">🎂</div>
@@ -128,7 +112,7 @@ body{
 <div id="cakeSolo">🎂</div>
 
 <div id="card">
-  <strong>İyi ki Doğdun Canım 🎂</strong><br><br>
+  <strong>İyi ki Doğdun Canım</strong><br><br>
   ekrana dokun
 </div>
 
@@ -139,10 +123,10 @@ const text=document.getElementById("text");
 const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
+const music=document.getElementById("music");
 
-let stage=0, lock=false;
+let stage=0, lock=false, musicStarted=false;
 
-// Açılış (yavaş)
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -158,7 +142,21 @@ intro.forEach((l,i)=>{
   },1200*i);
 });
 
-document.body.onclick=()=>{
+function startMusic(){
+  music.muted=false;
+  music.volume=1;
+  music.currentTime=0;
+  music.play().catch(()=>{});
+}
+
+document.body.addEventListener("click",()=>{
+  if(!musicStarted){
+    musicStarted=true;
+    startMusic();
+    setTimeout(startMusic,300);
+    setTimeout(startMusic,800);
+  }
+
   if(lock) return;
 
   if(stage===0){
@@ -168,7 +166,7 @@ document.body.onclick=()=>{
     setTimeout(()=>{
       carry.style.display="none";
       cake.style.display="block";
-      text.innerHTML="Pastayı üflemeden önce dilek tut ✨";
+      text.innerHTML="Pastayı üflemeden önce dilek tut";
       setTimeout(()=>count(8),1400);
     },3600);
   }
@@ -180,7 +178,7 @@ document.body.onclick=()=>{
       carry.style.display="none";
       cake.style.display="none";
       text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2600);
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
     },2600);
   }
   else if(stage===6){
@@ -188,16 +186,16 @@ document.body.onclick=()=>{
     card.style.display="none";
     final();
   }
-};
+});
 
 function count(n){
   stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut ✨<br><span class='count'>"+n+"</span>";
-  if(n>1) setTimeout(()=>count(n-1),1400);
+  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
+  if(n>1) setTimeout(()=>count(n-1),1200);
   else setTimeout(()=>{
     text.innerHTML="Pastayı üflemek için ekrana dokun";
     stage=3; lock=false;
-  },1600);
+  },1400);
 }
 
 function final(){
@@ -222,7 +220,7 @@ function final(){
     d.className="paper";
     d.innerHTML=lines[i++];
     text.appendChild(d);
-    setTimeout(write,1200);
+    setTimeout(write,1100);
   })();
 }
 
