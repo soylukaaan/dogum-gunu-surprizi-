@@ -18,10 +18,9 @@ body{
   justify-content:center;
 }
 
-/* 🔴 SADECE İLK EKRAN ARKA PLAN */
 body.intro-bg{
   background:
-    linear-gradient(rgba(255,209,220,.7),rgba(255,209,220,.7)),
+    linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
     url("intro.jpg") center/cover no-repeat;
 }
 
@@ -60,9 +59,31 @@ body.intro-bg{
   z-index:6;
 }
 
+/* 🔥 18 EKLENDİ */
+#age18{
+  position:fixed;
+  bottom:31%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:64px;
+  font-weight:bold;
+  color:#ff9800;
+  text-shadow:
+    0 0 8px #ff9800,
+    0 0 16px #ff5722,
+    0 0 24px #ff3d00;
+  animation:flicker 1.2s infinite;
+  display:none;
+  z-index:7;
+}
+
+@keyframes flicker{
+  0%,100%{opacity:1}
+  50%{opacity:.7}
+}
+
 .count{font-size:70px;font-weight:bold}
 
-/* 🔴 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -70,37 +91,22 @@ body.intro-bg{
   transform:translateX(-50%);
   display:none;
   background:white;
-  padding:22px;
+  padding:28px 36px;
   border-radius:22px;
-  font-size:28px;
+  font-size:30px;
   animation:drop 2.2s ease forwards;
   z-index:7;
   text-align:center;
 }
 #card img{
-  width:200px;
-  max-width:80vw;
+  width:180px;
   border-radius:16px;
   margin-bottom:12px;
 }
 @keyframes drop{to{top:28%}}
 
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
-}
+.signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
 
-/* 🔴 FİNAL FOTO */
-.final-photo{
-  width:260px;
-  max-width:85vw;
-  border-radius:18px;
-  margin:20px auto;
-  display:block;
-}
-
-/* BALON & PATLAMA */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -137,6 +143,9 @@ body.intro-bg{
 
 <div id="cakeSolo">🎂</div>
 
+<!-- 🔥 18 -->
+<div id="age18">18</div>
+
 <div id="card">
   <img src="kiz.jpg">
   <strong>İyi ki Doğdun Canım</strong><br><br>
@@ -151,6 +160,7 @@ const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
 const music=document.getElementById("music");
+const age18=document.getElementById("age18");
 
 let stage=0, lock=false, musicStarted=false;
 
@@ -182,13 +192,14 @@ document.body.addEventListener("click",()=>{
   if(lock) return;
 
   if(stage===0){
-    document.body.classList.remove("intro-bg");
     stage=1; lock=true;
+    document.body.classList.remove("intro-bg");
     text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
       carry.style.display="none";
       cake.style.display="block";
+      age18.style.display="block"; // 🔥 18 YANDI
       text.innerHTML="Pastayı üflemeden önce dilek tut";
       setTimeout(()=>count(8),1400);
     },3600);
@@ -196,6 +207,7 @@ document.body.addEventListener("click",()=>{
   else if(stage===3){
     stage=4; lock=true;
     cake.style.display="none";
+    age18.style.display="none"; // 🔥 18 SÖNDÜ
     setTimeout(()=>{
       card.style.display="block";
       stage=6; lock=false;
@@ -218,12 +230,12 @@ function count(n){
 
 function final(){
   const lines=[
-    '<img src="biz.jpg" class="final-photo">',
+    "<img src='biz.jpg' style='width:240px;border-radius:18px;margin-bottom:12px;'>",
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
     "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
-    '<span class="signature">Kaan’dan İclale</span>'
+    "<span class='signature'>Kaan’dan İclale</span>"
   ];
   let i=0;
   (function write(){
