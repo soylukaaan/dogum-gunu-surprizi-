@@ -18,10 +18,10 @@ body{
   justify-content:center;
 }
 
-/* 🔹 SADECE İLK EKRAN ARKA PLANI */
+/* 🔴 SADECE İLK EKRAN ARKA PLAN */
 body.intro-bg{
   background:
-    linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
+    linear-gradient(rgba(255,209,220,.7),rgba(255,209,220,.7)),
     url("intro.jpg") center/cover no-repeat;
 }
 
@@ -35,8 +35,6 @@ body.intro-bg{
 
 .paper{animation:write .6s ease}
 @keyframes write{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
-
-.white-heart{font-size:28px}
 
 #carry{
   position:fixed;
@@ -61,11 +59,10 @@ body.intro-bg{
   font-size:150px;
   z-index:6;
 }
-.off{filter:grayscale(100%);opacity:.6}
 
 .count{font-size:70px;font-weight:bold}
 
-/* 📩 MEKTUP */
+/* 🔴 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -73,22 +70,37 @@ body.intro-bg{
   transform:translateX(-50%);
   display:none;
   background:white;
-  padding:28px 36px;
+  padding:22px;
   border-radius:22px;
-  font-size:30px;
+  font-size:28px;
   animation:drop 2.2s ease forwards;
   z-index:7;
   text-align:center;
 }
 #card img{
-  width:180px;
+  width:200px;
+  max-width:80vw;
   border-radius:16px;
   margin-bottom:12px;
 }
 @keyframes drop{to{top:28%}}
 
-.signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
+.signature{
+  font-family:'Pacifico',cursive;
+  font-size:36px;
+  color:#b03060;
+}
 
+/* 🔴 FİNAL FOTO */
+.final-photo{
+  width:260px;
+  max-width:85vw;
+  border-radius:18px;
+  margin:20px auto;
+  display:block;
+}
+
+/* BALON & PATLAMA */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -125,7 +137,6 @@ body.intro-bg{
 
 <div id="cakeSolo">🎂</div>
 
-<!-- 📩 MEKTUP FOTO EKLENDİ -->
 <div id="card">
   <img src="kiz.jpg">
   <strong>İyi ki Doğdun Canım</strong><br><br>
@@ -159,9 +170,6 @@ intro.forEach((l,i)=>{
 });
 
 function startMusic(){
-  music.muted=false;
-  music.volume=1;
-  music.currentTime=0;
   music.play().catch(()=>{});
 }
 
@@ -169,15 +177,13 @@ document.body.addEventListener("click",()=>{
   if(!musicStarted){
     musicStarted=true;
     startMusic();
-    setTimeout(startMusic,300);
-    setTimeout(startMusic,800);
   }
 
   if(lock) return;
 
   if(stage===0){
+    document.body.classList.remove("intro-bg");
     stage=1; lock=true;
-    document.body.classList.remove("intro-bg"); /* 🔹 SADECE BURADA KALKAR */
     text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
@@ -189,17 +195,13 @@ document.body.addEventListener("click",()=>{
   }
   else if(stage===3){
     stage=4; lock=true;
-    cake.classList.add("off");
-    setTimeout(()=>carry.style.display="flex",1200);
+    cake.style.display="none";
     setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="none";
-      text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
-    },2600);
+      card.style.display="block";
+      stage=6; lock=false;
+    },2000);
   }
   else if(stage===6){
-    stage=7; lock=true;
     card.style.display="none";
     final();
   }
@@ -207,7 +209,6 @@ document.body.addEventListener("click",()=>{
 
 function count(n){
   stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
   if(n>1) setTimeout(()=>count(n-1),1200);
   else setTimeout(()=>{
     text.innerHTML="Pastayı üflemek için ekrana dokun";
@@ -217,15 +218,12 @@ function count(n){
 
 function final(){
   const lines=[
-    "<img src='biz.jpg' style='width:240px;border-radius:18px;margin-bottom:12px;'>",
+    '<img src="biz.jpg" class="final-photo">',
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
-    "",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
-    "",
-    "<span class='signature'>Kaan’dan İclale</span>",
-    "Doğum günü sürprizi 🎂"
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
+    '<span class="signature">Kaan’dan İclale</span>'
   ];
   let i=0;
   (function write(){
@@ -238,7 +236,7 @@ function final(){
     d.className="paper";
     d.innerHTML=lines[i++];
     text.appendChild(d);
-    setTimeout(write,1100);
+    setTimeout(write,1200);
   })();
 }
 
