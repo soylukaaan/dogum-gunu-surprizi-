@@ -2,264 +2,180 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Doğum Günü Sürprizi 🎂</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doğum Günü Sürprizi 🎂</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
-
 body{
-  margin:0;
-  height:100vh;
-  font-family:'Comic Neue',cursive;
-  overflow:hidden;
-  background:
-    linear-gradient(rgba(255,200,215,.75),rgba(255,200,215,.75)),
-    url("arka.jpg") center/cover no-repeat;
+  margin:0;height:100vh;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+  font-family:'Comic Neue',cursive;
+  background:#ffd1dc;
+  overflow:hidden;
 }
 
-#text{
-  text-align:center;
-  font-size:26px;
-  line-height:1.8;
-  color:#4b1f2b;
-  z-index:5;
-}
-
-.paper{
-  animation:write .6s ease;
-}
-@keyframes write{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1}
-}
-
-/* 🎂 PASTA */
-#cakeSolo{
+#bg{
   position:fixed;
-  bottom:12%;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:150px;
+  inset:0;
+  background:#ffd1dc;
+  background-size:cover;
+  background-position:center;
+  z-index:-1;
+}
+
+#text{text-align:center;font-size:26px;color:#4a1f2d}
+
+.fade{animation:fade .6s}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+
+#carry{
   display:none;
-  z-index:6;
+  position:fixed;
+  bottom:10%;
+  left:-60%;
+  align-items:center;
+  gap:10px;
+  animation:walk 3s forwards;
 }
+@keyframes walk{to{left:50%;transform:translateX(-50%)}}
+#carry img{width:120px}
+#carry span{font-size:120px}
 
-/* 🔥 18 */
+#cakeBox{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+}
 #age{
-  position:absolute;
-  top:-70px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:64px;
-  font-weight:bold;
-  color:#ffb300;
-  text-shadow:
-    0 0 10px #ff9800,
-    0 0 20px #ff5722,
-    0 0 30px #ff3d00;
-  animation:flicker 1.2s infinite;
+  font-size:70px;
+  color:#ff9800;
+  text-shadow:0 0 15px #ff9800;
 }
-@keyframes flicker{
-  0%{opacity:1}
-  50%{opacity:.6}
-  100%{opacity:1}
-}
+#cake{font-size:150px}
+.off{filter:grayscale(1);opacity:.6}
 
-.off{
-  filter:grayscale(100%);
-  opacity:.5;
-}
-.off #age{
-  animation:none;
-  text-shadow:none;
-  color:#777;
-}
-
-/* 📩 MEKTUP */
 #card{
+  display:none;
   position:fixed;
   top:-300px;
-  left:50%;
-  transform:translateX(-50%);
   background:white;
-  padding:26px 32px;
+  padding:20px;
   border-radius:20px;
-  font-size:28px;
-  display:none;
   animation:drop 2s forwards;
-  z-index:7;
 }
 @keyframes drop{to{top:25%}}
+#card img{width:160px;border-radius:14px}
 
-#card img{
-  width:160px;
-  border-radius:14px;
-  margin-bottom:12px;
-}
+#final{display:none;text-align:center}
+#final img{width:260px;border-radius:20px;margin-bottom:20px}
+.signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
 
-/* 🎈 BALON */
 .balloon{
   position:fixed;
-  bottom:-60px;
+  bottom:-50px;
   font-size:30px;
   animation:fly 8s linear forwards;
 }
 @keyframes fly{to{bottom:110%}}
 
-/* 💥 PATLAMA */
 .explosion{
   position:fixed;
   left:50%;top:50%;
   transform:translate(-50%,-50%);
   font-size:90px;
-  animation:boom 1.6s ease-out forwards;
+  animation:boom 1.5s forwards;
 }
 @keyframes boom{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
   50%{opacity:1}
   100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
-}
-
-/* 📸 FİNAL FOTO */
-.finalPhoto{
-  width:260px;
-  border-radius:18px;
-  margin:14px auto;
-  display:block;
-}
-
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music" preload="auto">
+<div id="bg"></div>
+
+<audio id="music">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<div id="cakeSolo">
-  🎂
+<div id="carry">
+  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
+  <span>🎂</span>
+</div>
+
+<div id="cakeBox">
   <div id="age">18</div>
+  <div id="cake">🎂</div>
 </div>
 
 <div id="card">
   <img src="kiz.jpg">
-  <strong>İyi ki Doğdun Canım</strong><br><br>
-  ekrana dokun
+  <div><b>İyi ki Doğdun Canım</b><br>ekrana dokun</div>
+</div>
+
+<div id="final">
+  <img src="biz.jpg">
+  <div class="fade">Doğum Günün Kutlu Olsun Aşkım 💚</div>
+  <div class="fade">İyi ki Varsın</div>
+  <div class="fade">İyi ki Benimlesin</div>
+  <div class="fade">Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun</div>
+  <div class="signature fade">Kaan’dan İclale</div>
 </div>
 
 <div id="text"></div>
 
 <script>
+let stage=0;
+const bg=document.getElementById("bg");
 const text=document.getElementById("text");
-const cake=document.getElementById("cakeSolo");
+const carry=document.getElementById("carry");
+const cakeBox=document.getElementById("cakeBox");
+const cake=document.getElementById("cake");
 const card=document.getElementById("card");
+const final=document.getElementById("final");
 const music=document.getElementById("music");
 
-let stage=0, lock=false, musicStarted=false;
+bg.style.backgroundImage="url('arka.jpg')";
+text.innerHTML=`<div class="fade">Koca Ayıdan Sana Bir Sürpriz Var 🎁</div>
+<div class="fade">Sürprizi öğrenmek istiyorsan</div>
+<div class="fade">ekrana dokun</div>`;
 
-/* GİRİŞ */
-const intro=[
-  "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
-  "Sürprizi öğrenmek istiyorsan",
-  "ekrana dokun"
-];
-
-intro.forEach((l,i)=>{
-  setTimeout(()=>{
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=l;
-    text.appendChild(d);
-  },1200*i);
-});
-
-function startMusic(){
-  music.volume=1;
-  music.play().catch(()=>{});
-}
-
-document.body.addEventListener("click",()=>{
-  if(!musicStarted){
-    musicStarted=true;
-    startMusic();
-  }
-
-  if(lock) return;
-
-  /* 🎂 PASTA GELİR */
+document.body.onclick=()=>{
   if(stage===0){
-    stage=1; lock=true;
+    music.play();
     text.innerHTML="";
-    cake.style.display="block";
-    setTimeout(()=>count(8),1400);
+    carry.style.display="flex";
+    setTimeout(()=>{
+      carry.style.display="none";
+      cakeBox.style.display="flex";
+      bg.style.background="#ffd1dc";
+      stage=1;
+      setTimeout(()=>{stage=2},2000);
+    },3000);
   }
-
-  /* 🎂 ÜFLE */
-  else if(stage===3){
-    stage=4; lock=true;
+  else if(stage===2){
     cake.classList.add("off");
     setTimeout(()=>{
-      cake.style.display="none";
+      cakeBox.style.display="none";
       card.style.display="block";
-      stage=6; lock=false;
+      stage=3;
     },2000);
   }
-
-  /* 📩 MEKTUP */
-  else if(stage===6){
-    stage=7; lock=true;
+  else if(stage===3){
     card.style.display="none";
-    final();
+    final.style.display="block";
+    balloons();
+    setTimeout(explode,4000);
+    stage=4;
   }
-});
-
-/* ⏱ GİZLİ GERİ SAYIM */
-function count(n){
-  stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut";
-  if(n>1) setTimeout(()=>count(n-1),1200);
-  else setTimeout(()=>{
-    text.innerHTML="Pastayı üflemek için ekrana dokun";
-    stage=3; lock=false;
-  },1400);
-}
-
-/* 🎉 FİNAL */
-function final(){
-  const lines=[
-    '<img src="biz.jpg" class="finalPhoto">',
-    "Doğum Günün Kutlu Olsun Aşkım 💚",
-    "İyi ki Varsın",
-    "İyi ki Benimlesin",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
-    '<span class="signature">Kaan’dan İclale</span>'
-  ];
-  let i=0;
-  (function write(){
-    if(i>=lines.length){
-      balloons();
-      setTimeout(explode,3500);
-      return;
-    }
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=lines[i++];
-    text.appendChild(d);
-    setTimeout(write,1200);
-  })();
-}
+};
 
 function balloons(){
   setInterval(()=>{
@@ -269,15 +185,14 @@ function balloons(){
     b.textContent="🎈";
     document.body.appendChild(b);
     setTimeout(()=>b.remove(),8000);
-  },800);
+  },900);
 }
-
 function explode(){
   const e=document.createElement("div");
   e.className="explosion";
   e.textContent="🎆";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1600);
+  setTimeout(()=>e.remove(),1500);
 }
 </script>
 
