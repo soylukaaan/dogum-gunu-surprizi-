@@ -8,34 +8,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
+*{box-sizing:border-box}
+
 body{
   margin:0;
   height:100vh;
   font-family:'Comic Neue',cursive;
   overflow:hidden;
+  background:
+    linear-gradient(rgba(255,200,215,.75),rgba(255,200,215,.75)),
+    url("arka.jpg") center/cover no-repeat;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:#ffd1dc;
-}
-
-/* ilk ekran arka plan */
-.bg-intro{
-  background:
-    linear-gradient(rgba(255,210,220,.65), rgba(255,210,220,.65)),
-    url("arka.jpg") center/cover no-repeat;
-}
-
-/* final arka plan */
-.bg-final{
-  background:#ffd1dc;
 }
 
 #text{
   text-align:center;
   font-size:26px;
-  line-height:1.9;
-  color:#5a2a3a;
+  line-height:1.8;
+  color:#4b1f2b;
   z-index:5;
 }
 
@@ -47,82 +39,99 @@ body{
   to{opacity:1}
 }
 
-/* Kedi + pasta */
-#carry{
-  position:fixed;
-  bottom:10%;
-  left:-70%;
-  display:none;
-  align-items:center;
-  gap:14px;
-  animation:carryIn 3.5s forwards;
-  z-index:6;
-}
-#carry img{width:130px}
-#carry .cake{font-size:140px}
-@keyframes carryIn{
-  to{left:50%;transform:translateX(-50%)}
-}
-
+/* 🎂 PASTA */
 #cakeSolo{
   position:fixed;
-  bottom:10%;
+  bottom:12%;
   left:50%;
   transform:translateX(-50%);
+  font-size:150px;
   display:none;
-  font-size:170px;
   z-index:6;
 }
-.off{filter:grayscale(100%);opacity:.5}
 
-/* 18 */
+/* 🔥 18 */
 #age{
-  position:fixed;
-  bottom:42%;
+  position:absolute;
+  top:-70px;
   left:50%;
   transform:translateX(-50%);
-  font-size:60px;
+  font-size:64px;
   font-weight:bold;
-  color:#ff9f00;
-  display:none;
+  color:#ffb300;
+  text-shadow:
+    0 0 10px #ff9800,
+    0 0 20px #ff5722,
+    0 0 30px #ff3d00;
+  animation:flicker 1.2s infinite;
+}
+@keyframes flicker{
+  0%{opacity:1}
+  50%{opacity:.6}
+  100%{opacity:1}
 }
 
-.count{font-size:70px;font-weight:bold}
+.off{
+  filter:grayscale(100%);
+  opacity:.5;
+}
+.off #age{
+  animation:none;
+  text-shadow:none;
+  color:#777;
+}
 
-/* mektup */
+/* 📩 MEKTUP */
 #card{
   position:fixed;
-  top:-320px;
+  top:-300px;
   left:50%;
   transform:translateX(-50%);
-  display:none;
   background:white;
-  padding:20px;
+  padding:26px 32px;
   border-radius:20px;
-  text-align:center;
-  animation:drop 2s ease forwards;
+  font-size:28px;
+  display:none;
+  animation:drop 2s forwards;
   z-index:7;
 }
+@keyframes drop{to{top:25%}}
+
 #card img{
-  width:220px;
-  border-radius:16px;
+  width:160px;
+  border-radius:14px;
   margin-bottom:12px;
 }
-@keyframes drop{
-  to{top:22%}
+
+/* 🎈 BALON */
+.balloon{
+  position:fixed;
+  bottom:-60px;
+  font-size:30px;
+  animation:fly 8s linear forwards;
+}
+@keyframes fly{to{bottom:110%}}
+
+/* 💥 PATLAMA */
+.explosion{
+  position:fixed;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-size:90px;
+  animation:boom 1.6s ease-out forwards;
+}
+@keyframes boom{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 }
 
-/* final */
-#finalBox{
-  display:none;
-  text-align:center;
-  z-index:5;
-}
-#finalBox img{
-  width:90%;
-  max-width:360px;
-  border-radius:20px;
-  margin-bottom:16px;
+/* 📸 FİNAL FOTO */
+.finalPhoto{
+  width:260px;
+  border-radius:18px;
+  margin:14px auto;
+  display:block;
 }
 
 .signature{
@@ -130,48 +139,19 @@ body{
   font-size:36px;
   color:#b03060;
 }
-
-/* balon */
-.balloon{
-  position:fixed;
-  bottom:-60px;
-  font-size:32px;
-  animation:fly 8s linear forwards;
-}
-@keyframes fly{
-  to{bottom:110%}
-}
-
-/* patlama */
-.explosion{
-  position:fixed;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  font-size:90px;
-  animation:boom 1.5s ease-out forwards;
-}
-@keyframes boom{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
-  50%{opacity:1}
-  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
-}
 </style>
 </head>
 
-<body class="bg-intro">
+<body>
 
-<audio id="music">
+<audio id="music" preload="auto">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<div id="carry">
-  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <div class="cake">🎂</div>
+<div id="cakeSolo">
+  🎂
+  <div id="age">18</div>
 </div>
-
-<div id="cakeSolo">🎂</div>
-<div id="age">18</div>
 
 <div id="card">
   <img src="kiz.jpg">
@@ -179,28 +159,17 @@ body{
   ekrana dokun
 </div>
 
-<div id="finalBox">
-  <img src="biz.jpg">
-  <div class="paper">Doğum Günün Kutlu Olsun Aşkım 💚</div>
-  <div class="paper">İyi ki Varsın</div>
-  <div class="paper">İyi ki Benimlesin</div>
-  <div class="paper">Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun</div>
-  <div class="signature">Kaan’dan İclale</div>
-</div>
-
 <div id="text"></div>
 
 <script>
 const text=document.getElementById("text");
-const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
-const age=document.getElementById("age");
 const card=document.getElementById("card");
-const finalBox=document.getElementById("finalBox");
 const music=document.getElementById("music");
 
 let stage=0, lock=false, musicStarted=false;
 
+/* GİRİŞ */
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -216,55 +185,80 @@ intro.forEach((l,i)=>{
   },1200*i);
 });
 
-document.body.onclick=()=>{
+function startMusic(){
+  music.volume=1;
+  music.play().catch(()=>{});
+}
+
+document.body.addEventListener("click",()=>{
   if(!musicStarted){
     musicStarted=true;
-    music.play().catch(()=>{});
+    startMusic();
   }
+
   if(lock) return;
 
+  /* 🎂 PASTA GELİR */
   if(stage===0){
-    stage=1;lock=true;
+    stage=1; lock=true;
     text.innerHTML="";
-    carry.style.display="flex";
-    setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="block";
-      age.style.display="block";
-      setTimeout(()=>count(8),1200);
-    },3500);
+    cake.style.display="block";
+    setTimeout(()=>count(8),1400);
   }
+
+  /* 🎂 ÜFLE */
   else if(stage===3){
-    stage=4;lock=true;
+    stage=4; lock=true;
     cake.classList.add("off");
-    age.style.display="none";
     setTimeout(()=>{
       cake.style.display="none";
       card.style.display="block";
-      stage=6;lock=false;
+      stage=6; lock=false;
     },2000);
   }
-  else if(stage===6){
-    card.style.display="none";
-    document.body.classList.remove("bg-intro");
-    document.body.classList.add("bg-final");
-    finalBox.style.display="block";
-    balloons();
-    setTimeout(explode,4000);
-  }
-};
 
+  /* 📩 MEKTUP */
+  else if(stage===6){
+    stage=7; lock=true;
+    card.style.display="none";
+    final();
+  }
+});
+
+/* ⏱ GİZLİ GERİ SAYIM */
 function count(n){
   stage=2;
-  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
-  if(n>1){
-    setTimeout(()=>count(n-1),1200);
-  }else{
-    setTimeout(()=>{
-      text.innerHTML="Pastayı üflemek için ekrana dokun";
-      stage=3;lock=false;
-    },1400);
-  }
+  text.innerHTML="Pastayı üflemeden önce dilek tut";
+  if(n>1) setTimeout(()=>count(n-1),1200);
+  else setTimeout(()=>{
+    text.innerHTML="Pastayı üflemek için ekrana dokun";
+    stage=3; lock=false;
+  },1400);
+}
+
+/* 🎉 FİNAL */
+function final(){
+  const lines=[
+    '<img src="biz.jpg" class="finalPhoto">',
+    "Doğum Günün Kutlu Olsun Aşkım 💚",
+    "İyi ki Varsın",
+    "İyi ki Benimlesin",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
+    '<span class="signature">Kaan’dan İclale</span>'
+  ];
+  let i=0;
+  (function write(){
+    if(i>=lines.length){
+      balloons();
+      setTimeout(explode,3500);
+      return;
+    }
+    const d=document.createElement("div");
+    d.className="paper";
+    d.innerHTML=lines[i++];
+    text.appendChild(d);
+    setTimeout(write,1200);
+  })();
 }
 
 function balloons(){
@@ -275,7 +269,7 @@ function balloons(){
     b.textContent="🎈";
     document.body.appendChild(b);
     setTimeout(()=>b.remove(),8000);
-  },900);
+  },800);
 }
 
 function explode(){
@@ -283,7 +277,7 @@ function explode(){
   e.className="explosion";
   e.textContent="🎆";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1500);
+  setTimeout(()=>e.remove(),1600);
 }
 </script>
 
