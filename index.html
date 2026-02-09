@@ -2,82 +2,97 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Doğum Günü Sürprizi 🎂</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
   font-family:'Comic Neue',cursive;
-  background:#ffd1dc;
   overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-#bg{
-  position:fixed;
-  inset:0;
-  background:#ffd1dc;
-  background-size:cover;
-  background-position:center;
-  z-index:-1;
+/* 🔹 SADECE İLK EKRAN ARKA PLANI */
+body.intro-bg{
+  background:
+    linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
+    url("intro.jpg") center/cover no-repeat;
 }
 
-#text{text-align:center;font-size:26px;color:#4a1f2d}
+#text{
+  text-align:center;
+  font-size:26px;
+  line-height:1.9;
+  color:#5a2a3a;
+  z-index:5;
+}
 
-.fade{animation:fade .6s}
-@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+.paper{animation:write .6s ease}
+@keyframes write{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+
+.white-heart{font-size:28px}
 
 #carry{
-  display:none;
   position:fixed;
   bottom:10%;
-  left:-60%;
+  left:-70%;
+  display:none;
   align-items:center;
-  gap:10px;
-  animation:walk 3s forwards;
+  gap:14px;
+  animation:carryIn 3.6s forwards;
+  z-index:6;
 }
-@keyframes walk{to{left:50%;transform:translateX(-50%)}}
 #carry img{width:120px}
-#carry span{font-size:120px}
+#carry .cake{font-size:120px}
+@keyframes carryIn{to{left:50%;transform:translateX(-50%)}}
 
-#cakeBox{
+#cakeSolo{
+  position:fixed;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
   display:none;
-  flex-direction:column;
-  align-items:center;
+  font-size:150px;
+  z-index:6;
 }
-#age{
-  font-size:70px;
-  color:#ff9800;
-  text-shadow:0 0 15px #ff9800;
-}
-#cake{font-size:150px}
-.off{filter:grayscale(1);opacity:.6}
+.off{filter:grayscale(100%);opacity:.6}
 
+.count{font-size:70px;font-weight:bold}
+
+/* 📩 MEKTUP */
 #card{
-  display:none;
   position:fixed;
   top:-300px;
+  left:50%;
+  transform:translateX(-50%);
+  display:none;
   background:white;
-  padding:20px;
-  border-radius:20px;
-  animation:drop 2s forwards;
+  padding:28px 36px;
+  border-radius:22px;
+  font-size:30px;
+  animation:drop 2.2s ease forwards;
+  z-index:7;
+  text-align:center;
 }
-@keyframes drop{to{top:25%}}
-#card img{width:160px;border-radius:14px}
+#card img{
+  width:180px;
+  border-radius:16px;
+  margin-bottom:12px;
+}
+@keyframes drop{to{top:28%}}
 
-#final{display:none;text-align:center}
-#final img{width:260px;border-radius:20px;margin-bottom:20px}
 .signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
 
 .balloon{
   position:fixed;
-  bottom:-50px;
-  font-size:30px;
+  bottom:-60px;
+  font-size:32px;
   animation:fly 8s linear forwards;
 }
 @keyframes fly{to{bottom:110%}}
@@ -87,95 +102,145 @@ body{
   left:50%;top:50%;
   transform:translate(-50%,-50%);
   font-size:90px;
-  animation:boom 1.5s forwards;
+  animation:boom 1.6s ease-out forwards;
 }
 @keyframes boom{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
   50%{opacity:1}
   100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
 }
 </style>
 </head>
 
-<body>
+<body class="intro-bg">
 
-<div id="bg"></div>
-
-<audio id="music">
+<audio id="music" preload="auto">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <span>🎂</span>
+  <div class="cake">🎂</div>
 </div>
 
-<div id="cakeBox">
-  <div id="age">18</div>
-  <div id="cake">🎂</div>
-</div>
+<div id="cakeSolo">🎂</div>
 
+<!-- 📩 MEKTUP FOTO EKLENDİ -->
 <div id="card">
   <img src="kiz.jpg">
-  <div><b>İyi ki Doğdun Canım</b><br>ekrana dokun</div>
-</div>
-
-<div id="final">
-  <img src="biz.jpg">
-  <div class="fade">Doğum Günün Kutlu Olsun Aşkım 💚</div>
-  <div class="fade">İyi ki Varsın</div>
-  <div class="fade">İyi ki Benimlesin</div>
-  <div class="fade">Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun</div>
-  <div class="signature fade">Kaan’dan İclale</div>
+  <strong>İyi ki Doğdun Canım</strong><br><br>
+  ekrana dokun
 </div>
 
 <div id="text"></div>
 
 <script>
-let stage=0;
-const bg=document.getElementById("bg");
 const text=document.getElementById("text");
 const carry=document.getElementById("carry");
-const cakeBox=document.getElementById("cakeBox");
-const cake=document.getElementById("cake");
+const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
-const final=document.getElementById("final");
 const music=document.getElementById("music");
 
-bg.style.backgroundImage="url('arka.jpg')";
-text.innerHTML=`<div class="fade">Koca Ayıdan Sana Bir Sürpriz Var 🎁</div>
-<div class="fade">Sürprizi öğrenmek istiyorsan</div>
-<div class="fade">ekrana dokun</div>`;
+let stage=0, lock=false, musicStarted=false;
 
-document.body.onclick=()=>{
+const intro=[
+  "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
+  "Sürprizi öğrenmek istiyorsan",
+  "ekrana dokun"
+];
+
+intro.forEach((l,i)=>{
+  setTimeout(()=>{
+    const d=document.createElement("div");
+    d.className="paper";
+    d.innerHTML=l;
+    text.appendChild(d);
+  },1200*i);
+});
+
+function startMusic(){
+  music.muted=false;
+  music.volume=1;
+  music.currentTime=0;
+  music.play().catch(()=>{});
+}
+
+document.body.addEventListener("click",()=>{
+  if(!musicStarted){
+    musicStarted=true;
+    startMusic();
+    setTimeout(startMusic,300);
+    setTimeout(startMusic,800);
+  }
+
+  if(lock) return;
+
   if(stage===0){
-    music.play();
+    stage=1; lock=true;
+    document.body.classList.remove("intro-bg"); /* 🔹 SADECE BURADA KALKAR */
     text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
       carry.style.display="none";
-      cakeBox.style.display="flex";
-      bg.style.background="#ffd1dc";
-      stage=1;
-      setTimeout(()=>{stage=2},2000);
-    },3000);
-  }
-  else if(stage===2){
-    cake.classList.add("off");
-    setTimeout(()=>{
-      cakeBox.style.display="none";
-      card.style.display="block";
-      stage=3;
-    },2000);
+      cake.style.display="block";
+      text.innerHTML="Pastayı üflemeden önce dilek tut";
+      setTimeout(()=>count(8),1400);
+    },3600);
   }
   else if(stage===3){
-    card.style.display="none";
-    final.style.display="block";
-    balloons();
-    setTimeout(explode,4000);
-    stage=4;
+    stage=4; lock=true;
+    cake.classList.add("off");
+    setTimeout(()=>carry.style.display="flex",1200);
+    setTimeout(()=>{
+      carry.style.display="none";
+      cake.style.display="none";
+      text.innerHTML="";
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
+    },2600);
   }
-};
+  else if(stage===6){
+    stage=7; lock=true;
+    card.style.display="none";
+    final();
+  }
+});
+
+function count(n){
+  stage=2;
+  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
+  if(n>1) setTimeout(()=>count(n-1),1200);
+  else setTimeout(()=>{
+    text.innerHTML="Pastayı üflemek için ekrana dokun";
+    stage=3; lock=false;
+  },1400);
+}
+
+function final(){
+  const lines=[
+    "<img src='biz.jpg' style='width:240px;border-radius:18px;margin-bottom:12px;'>",
+    "Doğum Günün Kutlu Olsun Aşkım 💚",
+    "İyi ki Varsın",
+    "İyi ki Benimlesin",
+    "",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
+    "",
+    "<span class='signature'>Kaan’dan İclale</span>",
+    "Doğum günü sürprizi 🎂"
+  ];
+  let i=0;
+  (function write(){
+    if(i>=lines.length){
+      balloons();
+      setTimeout(explode,4000);
+      return;
+    }
+    const d=document.createElement("div");
+    d.className="paper";
+    d.innerHTML=lines[i++];
+    text.appendChild(d);
+    setTimeout(write,1100);
+  })();
+}
 
 function balloons(){
   setInterval(()=>{
@@ -187,12 +252,13 @@ function balloons(){
     setTimeout(()=>b.remove(),8000);
   },900);
 }
+
 function explode(){
   const e=document.createElement("div");
   e.className="explosion";
   e.textContent="🎆";
   document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1500);
+  setTimeout(()=>e.remove(),1600);
 }
 </script>
 
