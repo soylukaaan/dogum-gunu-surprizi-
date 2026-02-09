@@ -18,6 +18,7 @@ body{
   justify-content:center;
 }
 
+/* 🔹 SADECE İLK EKRAN ARKA PLANI */
 body.intro-bg{
   background:
     linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
@@ -34,6 +35,8 @@ body.intro-bg{
 
 .paper{animation:write .6s ease}
 @keyframes write{from{opacity:0;transform:translateY(10px)}to{opacity:1}}
+
+.white-heart{font-size:28px}
 
 #carry{
   position:fixed;
@@ -58,32 +61,11 @@ body.intro-bg{
   font-size:150px;
   z-index:6;
 }
-
-/* 🔥 18 EKLENDİ */
-#age18{
-  position:fixed;
-  bottom:31%;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:64px;
-  font-weight:bold;
-  color:#ff9800;
-  text-shadow:
-    0 0 8px #ff9800,
-    0 0 16px #ff5722,
-    0 0 24px #ff3d00;
-  animation:flicker 1.2s infinite;
-  display:none;
-  z-index:7;
-}
-
-@keyframes flicker{
-  0%,100%{opacity:1}
-  50%{opacity:.7}
-}
+.off{filter:grayscale(100%);opacity:.6}
 
 .count{font-size:70px;font-weight:bold}
 
+/* 📩 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -143,9 +125,7 @@ body.intro-bg{
 
 <div id="cakeSolo">🎂</div>
 
-<!-- 🔥 18 -->
-<div id="age18">18</div>
-
+<!-- 📩 MEKTUP FOTO EKLENDİ -->
 <div id="card">
   <img src="kiz.jpg">
   <strong>İyi ki Doğdun Canım</strong><br><br>
@@ -160,7 +140,6 @@ const carry=document.getElementById("carry");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
 const music=document.getElementById("music");
-const age18=document.getElementById("age18");
 
 let stage=0, lock=false, musicStarted=false;
 
@@ -180,6 +159,9 @@ intro.forEach((l,i)=>{
 });
 
 function startMusic(){
+  music.muted=false;
+  music.volume=1;
+  music.currentTime=0;
   music.play().catch(()=>{});
 }
 
@@ -187,33 +169,37 @@ document.body.addEventListener("click",()=>{
   if(!musicStarted){
     musicStarted=true;
     startMusic();
+    setTimeout(startMusic,300);
+    setTimeout(startMusic,800);
   }
 
   if(lock) return;
 
   if(stage===0){
     stage=1; lock=true;
-    document.body.classList.remove("intro-bg");
+    document.body.classList.remove("intro-bg"); /* 🔹 SADECE BURADA KALKAR */
     text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
       carry.style.display="none";
       cake.style.display="block";
-      age18.style.display="block"; // 🔥 18 YANDI
       text.innerHTML="Pastayı üflemeden önce dilek tut";
       setTimeout(()=>count(8),1400);
     },3600);
   }
   else if(stage===3){
     stage=4; lock=true;
-    cake.style.display="none";
-    age18.style.display="none"; // 🔥 18 SÖNDÜ
+    cake.classList.add("off");
+    setTimeout(()=>carry.style.display="flex",1200);
     setTimeout(()=>{
-      card.style.display="block";
-      stage=6; lock=false;
-    },2000);
+      carry.style.display="none";
+      cake.style.display="none";
+      text.innerHTML="";
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
+    },2600);
   }
   else if(stage===6){
+    stage=7; lock=true;
     card.style.display="none";
     final();
   }
@@ -221,6 +207,7 @@ document.body.addEventListener("click",()=>{
 
 function count(n){
   stage=2;
+  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
   if(n>1) setTimeout(()=>count(n-1),1200);
   else setTimeout(()=>{
     text.innerHTML="Pastayı üflemek için ekrana dokun";
@@ -234,8 +221,11 @@ function final(){
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
-    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun",
-    "<span class='signature'>Kaan’dan İclale</span>"
+    "",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun <span class='white-heart'>🤍</span>",
+    "",
+    "<span class='signature'>Kaan’dan İclale</span>",
+    "Doğum günü sürprizi 🎂"
   ];
   let i=0;
   (function write(){
@@ -248,7 +238,7 @@ function final(){
     d.className="paper";
     d.innerHTML=lines[i++];
     text.appendChild(d);
-    setTimeout(write,1200);
+    setTimeout(write,1100);
   })();
 }
 
