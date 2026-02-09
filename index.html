@@ -18,10 +18,10 @@ body{
   justify-content:center;
 }
 
-/* 👉 SADECE İLK EKRAN FOTOĞRAF */
+/* ilk ekran arka plan */
 body.intro-bg{
   background:
-    linear-gradient(rgba(255,209,220,0.75), rgba(255,209,220,0.75)),
+    linear-gradient(rgba(255,209,220,.75), rgba(255,209,220,.75)),
     url("arka.jpg") center/cover no-repeat;
 }
 
@@ -65,6 +65,7 @@ body.intro-bg{
 
 .count{font-size:70px;font-weight:bold}
 
+/* mektup */
 #card{
   position:fixed;
   top:-300px;
@@ -72,7 +73,7 @@ body.intro-bg{
   transform:translateX(-50%);
   display:none;
   background:white;
-  padding:28px 36px;
+  padding:24px 30px;
   border-radius:22px;
   font-size:30px;
   animation:drop 2.2s ease forwards;
@@ -80,7 +81,25 @@ body.intro-bg{
 }
 @keyframes drop{to{top:28%}}
 
+.card-photo{
+  width:220px;
+  max-width:80vw;
+  border-radius:18px;
+  margin:0 auto 12px;
+  display:block;
+  box-shadow:0 6px 18px rgba(0,0,0,.25);
+}
+
 .signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
+
+.final-photo{
+  width:240px;
+  max-width:85vw;
+  border-radius:20px;
+  margin:10px auto 18px;
+  display:block;
+  box-shadow:0 8px 22px rgba(0,0,0,.3);
+}
 
 .balloon{
   position:fixed;
@@ -119,6 +138,7 @@ body.intro-bg{
 <div id="cakeSolo">🎂</div>
 
 <div id="card">
+  <img src="kiz.jpg" class="card-photo">
   <strong>İyi ki Doğdun Canım</strong><br><br>
   ekrana dokun
 </div>
@@ -134,7 +154,6 @@ const music=document.getElementById("music");
 
 let stage=0, lock=false, musicStarted=false;
 
-/* 👉 FOTOĞRAFLI AÇILIŞ */
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -159,7 +178,7 @@ document.body.addEventListener("click",()=>{
   if(lock) return;
 
   if(stage===0){
-    document.body.classList.remove("intro-bg"); // FOTOĞRAF BURADA BİTER
+    document.body.classList.remove("intro-bg");
     stage=1; lock=true;
     text.innerHTML="";
     carry.style.display="flex";
@@ -200,6 +219,7 @@ function count(n){
 
 function final(){
   const lines=[
+    '<img src="biz.jpg" class="final-photo">',
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
