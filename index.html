@@ -18,17 +18,17 @@ body{
   justify-content:center;
 }
 
-/* 🔹 İLK EKRAN */
+/* intro */
 body.intro-bg{
   background:
     linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
     url("intro.jpg") center/cover no-repeat;
 }
 
-/* 🔹 SADECE PASTA EKRANI */
+/* pasta sahnesi */
 body.cake-bg{
   background:
-    linear-gradient(rgba(255,210,220,.6),rgba(255,210,220,.6)),
+    linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
     url("arka.jpg") center/cover no-repeat;
 }
 
@@ -38,7 +38,6 @@ body.cake-bg{
   line-height:1.9;
   color:#5a2a3a;
   z-index:5;
-  transform: translateY(-30px); /* yazılar biraz yukarı */
 }
 
 .paper{animation:write .6s ease}
@@ -58,7 +57,6 @@ body.cake-bg{
 #carry .cake{font-size:120px}
 @keyframes carryIn{to{left:50%;transform:translateX(-50%)}}
 
-/* 🎂 PASTA + 18 */
 #cakeWrap{
   position:fixed;
   bottom:6%;
@@ -70,24 +68,25 @@ body.cake-bg{
 }
 #cakeSolo{
   font-size:150px;
+  position:relative;
 }
+
 #age{
-  font-size:64px;
+  position:absolute;
+  top:38%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:58px;
   font-weight:bold;
   color:#ff9800;
-  margin-bottom:-10px;
-  text-shadow:0 0 8px #ffb300,0 0 16px #ff6f00;
+  text-shadow:0 0 6px #ffb300,0 0 14px #ff6f00,0 0 22px #ff3d00;
   animation:flame 1s infinite alternate;
 }
-@keyframes flame{
-  from{transform:scale(1);opacity:.9}
-  to{transform:scale(1.1);opacity:1}
-}
+@keyframes flame{to{opacity:.7;transform:translate(-50%,-52%) scale(1.05)}}
 
 .off{filter:grayscale(100%);opacity:.6}
 .count{font-size:70px;font-weight:bold}
 
-/* 📩 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -110,12 +109,33 @@ body.cake-bg{
 @keyframes drop{to{top:28%}}
 
 .signature{font-family:'Pacifico',cursive;font-size:36px;color:#b03060}
+
+.balloon{
+  position:fixed;
+  bottom:-60px;
+  font-size:32px;
+  animation:fly 8s linear forwards;
+}
+@keyframes fly{to{bottom:110%}}
+
+.explosion{
+  position:fixed;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-size:90px;
+  animation:boom 1.6s ease-out forwards;
+}
+@keyframes boom{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
+}
 </style>
 </head>
 
 <body class="intro-bg">
 
-<audio id="music" preload="auto">
+<audio id="music">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
@@ -124,7 +144,6 @@ body.cake-bg{
   <div class="cake">🎂</div>
 </div>
 
-<!-- 🎂 PASTA SAHNESİ -->
 <div id="cakeWrap">
   <div id="age">18</div>
   <div id="cakeSolo">🎂</div>
@@ -142,10 +161,11 @@ body.cake-bg{
 const text=document.getElementById("text");
 const carry=document.getElementById("carry");
 const cakeWrap=document.getElementById("cakeWrap");
+const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
 const music=document.getElementById("music");
 
-let stage=0, lock=false, musicStarted=false;
+let stage=0, lock=true;
 
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
@@ -159,23 +179,19 @@ intro.forEach((l,i)=>{
     d.className="paper";
     d.innerHTML=l;
     text.appendChild(d);
+    if(i===intro.length-1) lock=false;
   },1200*i);
 });
 
 document.body.addEventListener("click",()=>{
-  if(!musicStarted){
-    musicStarted=true;
-    music.play().catch(()=>{});
-  }
   if(lock) return;
 
   if(stage===0){
     stage=1; lock=true;
-    document.body.classList.remove("intro-bg");
-    document.body.classList.add("cake-bg");
+    music.play().catch(()=>{});
+    document.body.className="cake-bg";
     text.innerHTML="";
     carry.style.display="flex";
-
     setTimeout(()=>{
       carry.style.display="none";
       cakeWrap.style.display="block";
@@ -185,18 +201,17 @@ document.body.addEventListener("click",()=>{
   }
   else if(stage===3){
     stage=4; lock=true;
-    cakeWrap.classList.add("off");
+    cake.classList.add("off");
     setTimeout(()=>carry.style.display="flex",1200);
     setTimeout(()=>{
       carry.style.display="none";
       cakeWrap.style.display="none";
-      document.body.classList.remove("cake-bg");
-      text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
+      document.body.className="";
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},1500);
     },2600);
   }
   else if(stage===6){
-    stage=7;
+    stage=7; lock=true;
     card.style.display="none";
     final();
   }
@@ -218,17 +233,43 @@ function final(){
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
     "İyi ki Benimlesin",
+    "",
+    "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun 🤍",
+    "",
     "<span class='signature'>Kaan’dan İclale</span>"
   ];
   let i=0;
   (function write(){
-    if(i>=lines.length) return;
+    if(i>=lines.length){
+      balloons();
+      setTimeout(explode,3500);
+      return;
+    }
     const d=document.createElement("div");
     d.className="paper";
     d.innerHTML=lines[i++];
     text.appendChild(d);
     setTimeout(write,1100);
   })();
+}
+
+function balloons(){
+  setInterval(()=>{
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*100+"vw";
+    b.textContent="🎈";
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),8000);
+  },600);
+}
+
+function explode(){
+  const e=document.createElement("div");
+  e.className="explosion";
+  e.textContent="🎆";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1600);
 }
 </script>
 
