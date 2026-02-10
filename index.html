@@ -19,14 +19,14 @@ body{
   background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
 }
 
-/* 🎁 İLK EKRAN */
+/* 🎁 İNTRO */
 body.intro-bg{
   background:
     linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
     url("intro.jpg") center/cover no-repeat;
 }
 
-/* 🎂 PASTA SAHNESİ */
+/* 🎂 PASTA + KEDİ */
 body.cake-bg{
   background:
     linear-gradient(rgba(255,210,220,.55),rgba(255,210,220,.55)),
@@ -39,6 +39,7 @@ body.cake-bg{
   line-height:1.9;
   color:#5a2a3a;
   z-index:5;
+  margin-bottom:120px; /* yazılar yukarı */
 }
 
 .paper{animation:write .6s ease}
@@ -47,14 +48,13 @@ body.cake-bg{
   to{opacity:1}
 }
 
-/* 🐱 KEDİ + PASTA */
+/* 🐱 KEDİ */
 #carry{
   position:fixed;
   bottom:10%;
   left:-70%;
   display:none;
   align-items:center;
-  gap:14px;
   animation:carryIn 3.6s forwards;
   z-index:6;
 }
@@ -66,24 +66,22 @@ body.cake-bg{
 /* 🎂 PASTA */
 #cakeWrap{
   position:fixed;
-  bottom:6%;
+  bottom:4%;
   left:50%;
   transform:translateX(-50%);
   display:none;
   z-index:6;
   text-align:center;
-}
-#cakeWrap img{
-  width:220px;
+  font-size:150px;
 }
 
-/* 🔥 18 */
+/* 🔥 18 (bir tık aşağıda) */
 #age{
   position:absolute;
-  top:-40px;
+  top:-20px;
   left:50%;
   transform:translateX(-50%);
-  font-size:56px;
+  font-size:52px;
   font-weight:bold;
   color:#ffb300;
   text-shadow:0 0 10px #ff9800,0 0 20px #ff5722;
@@ -117,7 +115,7 @@ body.cake-bg{
   color:#b03060;
 }
 
-/* 🎈 BALON */
+/* 🎈 */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -126,7 +124,7 @@ body.cake-bg{
 }
 @keyframes fly{to{bottom:110%}}
 
-/* 🎆 PATLAMA */
+/* 🎆 */
 .explosion{
   position:fixed;
   left:50%;
@@ -155,7 +153,7 @@ body.cake-bg{
 
 <div id="cakeWrap">
   <div id="age">18</div>
-  <img src="pasta.png">
+  🎂
 </div>
 
 <div id="card">
@@ -173,7 +171,7 @@ const cake=document.getElementById("cakeWrap");
 const card=document.getElementById("card");
 const music=document.getElementById("music");
 
-let stage=0,lock=false,musicStarted=false;
+let stage=0,lock=false,started=false;
 
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
@@ -191,8 +189,8 @@ intro.forEach((l,i)=>{
 });
 
 document.body.addEventListener("click",()=>{
-  if(!musicStarted){
-    musicStarted=true;
+  if(!started){
+    started=true;
     music.play().catch(()=>{});
   }
   if(lock) return;
@@ -214,6 +212,7 @@ document.body.addEventListener("click",()=>{
     stage=4;lock=true;
     setTimeout(()=>{
       cake.style.display="none";
+      document.body.style.background="linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee)";
       text.innerHTML="";
       setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
     },2000);
@@ -234,7 +233,6 @@ function count(n){
 }
 
 function final(){
-  document.body.style.background="linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee)";
   const lines=[
     "<img src='biz.jpg' style='width:260px;border-radius:18px;margin-bottom:12px;'>",
     "Doğum Günün Kutlu Olsun Aşkım 💚",
