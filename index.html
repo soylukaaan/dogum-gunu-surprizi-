@@ -6,11 +6,11 @@ const age18 = document.getElementById("age18");
 const card = document.getElementById("card");
 const music = document.getElementById("music");
 
-let stage = 0;
+let stage = -1;        // -1 = intro yazıları
 let lock = true;
 let started = false;
 
-/* ====== GİRİŞ YAZILARI ====== */
+/* ===== INTRO ===== */
 const intro = [
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
@@ -23,11 +23,16 @@ intro.forEach((l, i) => {
     d.className = "paper";
     d.innerHTML = l;
     text.appendChild(d);
-    if (i === intro.length - 1) lock = false; // SADECE SON YAZIDAN SONRA
+
+    // SADECE “ekrana dokun” geldikten sonra ilerlenebilir
+    if (i === intro.length - 1) {
+      stage = 0;
+      lock = false;
+    }
   }, 1200 * i);
 });
 
-/* ====== TIKLAMA ====== */
+/* ===== CLICK ===== */
 document.body.addEventListener("click", () => {
   if (lock) return;
 
@@ -36,10 +41,11 @@ document.body.addEventListener("click", () => {
     music.play().catch(()=>{});
   }
 
-  /* 1️⃣ GİRİŞTEN PASTAYA */
+  /* 0️⃣ INTRO → PASTA */
   if (stage === 0) {
     stage = 1;
     lock = true;
+
     document.body.className = "cake-bg";
     text.innerHTML = "";
     carry.style.display = "flex";
@@ -57,31 +63,33 @@ document.body.addEventListener("click", () => {
     stage = 4;
     lock = true;
 
-    // 🔥 SÖNME
+    // pasta söner
     age18.style.opacity = "0.2";
     cake.style.filter = "grayscale(100%)";
 
-    // 🐱 pastayı alıp gitsin
+    // 1.5 sn sonra kedi gelsin
     setTimeout(() => {
       carry.style.display = "flex";
-    }, 1200);
+    }, 1500);
 
+    // 3 sn sonra kedi pastayı alıp gitsin
     setTimeout(() => {
       carry.style.display = "none";
       cake.style.display = "none";
       text.innerHTML = "";
+    }, 3000);
+
+    // 4 sn sonra mektup
+    setTimeout(() => {
       document.body.style.background =
         "linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee)";
-    }, 2600);
-
-    setTimeout(() => {
       card.style.display = "block";
       stage = 6;
       lock = false;
-    }, 3600);
+    }, 4000);
   }
 
-  /* 6️⃣ MEKTUP */
+  /* 6️⃣ MEKTUP → FINAL */
   else if (stage === 6) {
     stage = 7;
     lock = true;
@@ -90,7 +98,7 @@ document.body.addEventListener("click", () => {
   }
 });
 
-/* ====== GERİ SAYIM ====== */
+/* ===== COUNTDOWN ===== */
 function count(n) {
   stage = 2;
   text.innerHTML =
@@ -107,7 +115,7 @@ function count(n) {
   }
 }
 
-/* ====== FİNAL ====== */
+/* ===== FINAL ===== */
 function final() {
   const lines = [
     "<img src='biz.jpg' style='width:240px;border-radius:18px;margin-bottom:12px;'>",
