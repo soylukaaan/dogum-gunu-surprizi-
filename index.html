@@ -59,7 +59,13 @@ body.cake-bg{
   z-index:6;
 }
 #carry img{width:120px}
-#carry .cake{font-size:120px}
+
+/* 🎂 emoji sabit */
+.cake-emoji{
+  font-size:120px;
+  line-height:1;
+  display:inline-block;
+}
 
 @keyframes carryIn{
   to{left:50%;transform:translateX(-50%)}
@@ -91,7 +97,9 @@ body.cake-bg{
     0 0 24px #ff5722;
 }
 
-/* MEKTUP */
+.count{font-size:70px;font-weight:bold}
+
+/* 📩 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -119,7 +127,7 @@ body.cake-bg{
   color:#b03060;
 }
 
-/* BALON */
+/* 🎈 */
 .balloon{
   position:fixed;
   bottom:-60px;
@@ -128,7 +136,7 @@ body.cake-bg{
 }
 @keyframes fly{to{bottom:110%}}
 
-/* PATLAMA */
+/* 🎆 */
 .explosion{
   position:fixed;
   left:50%;top:50%;
@@ -150,19 +158,19 @@ body.cake-bg{
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
-<!-- KEDİ + PASTA -->
+<!-- 🐱 + 🎂 BİRLİKTE -->
 <div id="carry">
   <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <div class="cake">🎂</div>
+  <span class="cake-emoji">🎂</span>
 </div>
 
-<!-- ORTADA KALAN PASTA -->
+<!-- 🎂 ORTADA -->
 <div id="cakeSolo">
   <div id="age18">18</div>
   🎂
 </div>
 
-<!-- MEKTUP -->
+<!-- 📩 MEKTUP -->
 <div id="card">
   <img src="kiz.jpg">
   <strong>İyi ki Doğdun Canım</strong><br><br>
