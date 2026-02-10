@@ -1,254 +1,115 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<meta charset="UTF-8">
-<title>Doğum Günü Sürprizi 🎂</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
-
-<style>
-body{
-  margin:0;height:100vh;
-  background:linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee);
-  font-family:'Comic Neue',cursive;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* İNTRO */
-body.intro-bg{
-  background:
-    linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
-    url("intro.jpg") center/cover no-repeat;
-}
-
-/* PASTA SAHNESİ */
-body.cake-bg{
-  background:
-    linear-gradient(rgba(255,210,220,.55),rgba(255,210,220,.55)),
-    url("arka.jpg") center/cover no-repeat;
-}
-
-#text{
-  text-align:center;
-  font-size:26px;
-  line-height:1.9;
-  color:#5a2a3a;
-  z-index:5;
-  margin-bottom:120px;
-}
-
-.paper{animation:write .6s ease}
-@keyframes write{
-  from{opacity:0;transform:translateY(10px)}
-  to{opacity:1}
-}
-
-/* 🐱 + 🎂 BERABER */
-#carry{
-  position:fixed;
-  bottom:10%;
-  left:-70%;
-  display:none;
-  align-items:center;
-  gap:14px;
-  animation:carryIn 3.6s forwards;
-  z-index:6;
-}
-#carry img{width:120px}
-
-/* 🎂 emoji sabit */
-.cake-emoji{
-  font-size:120px;
-  line-height:1;
-  display:inline-block;
-}
-
-@keyframes carryIn{
-  to{left:50%;transform:translateX(-50%)}
-}
-
-/* 🎂 ORTADA KALAN PASTA */
-#cakeSolo{
-  position:fixed;
-  bottom:4%;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  font-size:150px;
-  z-index:6;
-}
-
-/* 🔥 18 */
-#age18{
-  position:absolute;
-  top:-25px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:52px;
-  font-weight:bold;
-  color:#ffb300;
-  text-shadow:
-    0 0 8px #ff9800,
-    0 0 16px #ff5722,
-    0 0 24px #ff5722;
-}
-
-.count{font-size:70px;font-weight:bold}
-
-/* 📩 MEKTUP */
-#card{
-  position:fixed;
-  top:-300px;
-  left:50%;
-  transform:translateX(-50%);
-  display:none;
-  background:white;
-  padding:28px 36px;
-  border-radius:22px;
-  font-size:30px;
-  animation:drop 2.2s ease forwards;
-  z-index:7;
-  text-align:center;
-}
-#card img{
-  width:180px;
-  border-radius:16px;
-  margin-bottom:12px;
-}
-@keyframes drop{to{top:28%}}
-
-.signature{
-  font-family:'Pacifico',cursive;
-  font-size:36px;
-  color:#b03060;
-}
-
-/* 🎈 */
-.balloon{
-  position:fixed;
-  bottom:-60px;
-  font-size:32px;
-  animation:fly 8s linear forwards;
-}
-@keyframes fly{to{bottom:110%}}
-
-/* 🎆 */
-.explosion{
-  position:fixed;
-  left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  font-size:90px;
-  animation:boom 1.6s ease-out forwards;
-}
-@keyframes boom{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
-  50%{opacity:1}
-  100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
-}
-</style>
-</head>
-
-<body class="intro-bg">
-
-<audio id="music">
-  <source src="dogum-gunu.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 🐱 + 🎂 BİRLİKTE -->
-<div id="carry">
-  <img src="https://cdn-icons-png.flaticon.com/512/763/763704.png">
-  <span class="cake-emoji">🎂</span>
-</div>
-
-<!-- 🎂 ORTADA -->
-<div id="cakeSolo">
-  <div id="age18">18</div>
-  🎂
-</div>
-
-<!-- 📩 MEKTUP -->
-<div id="card">
-  <img src="kiz.jpg">
-  <strong>İyi ki Doğdun Canım</strong><br><br>
-  ekrana dokun
-</div>
-
-<div id="text"></div>
-
 <script>
-const text=document.getElementById("text");
-const carry=document.getElementById("carry");
-const cake=document.getElementById("cakeSolo");
-const card=document.getElementById("card");
-const music=document.getElementById("music");
+const text = document.getElementById("text");
+const carry = document.getElementById("carry");
+const cake = document.getElementById("cakeSolo");
+const age18 = document.getElementById("age18");
+const card = document.getElementById("card");
+const music = document.getElementById("music");
 
-let stage=0,lock=false,started=false;
+let stage = 0;
+let lock = true;
+let started = false;
 
-const intro=[
+/* ====== GİRİŞ YAZILARI ====== */
+const intro = [
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
   "Sürprizi öğrenmek istiyorsan",
   "ekrana dokun"
 ];
 
-intro.forEach((l,i)=>{
-  setTimeout(()=>{
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=l;
+intro.forEach((l, i) => {
+  setTimeout(() => {
+    const d = document.createElement("div");
+    d.className = "paper";
+    d.innerHTML = l;
     text.appendChild(d);
-  },1200*i);
+    if (i === intro.length - 1) lock = false; // SADECE SON YAZIDAN SONRA
+  }, 1200 * i);
 });
 
-document.body.addEventListener("click",()=>{
-  if(!started){
-    started=true;
+/* ====== TIKLAMA ====== */
+document.body.addEventListener("click", () => {
+  if (lock) return;
+
+  if (!started) {
+    started = true;
     music.play().catch(()=>{});
   }
-  if(lock) return;
 
-  if(stage===0){
-    stage=1;lock=true;
-    document.body.className="cake-bg";
-    text.innerHTML="";
-    carry.style.display="flex";
+  /* 1️⃣ GİRİŞTEN PASTAYA */
+  if (stage === 0) {
+    stage = 1;
+    lock = true;
+    document.body.className = "cake-bg";
+    text.innerHTML = "";
+    carry.style.display = "flex";
 
-    setTimeout(()=>{
-      carry.style.display="none";
-      cake.style.display="block";
-      text.innerHTML="Pastayı üflemeden önce dilek tut";
-      setTimeout(()=>count(8),1400);
-    },3600);
+    setTimeout(() => {
+      carry.style.display = "none";
+      cake.style.display = "block";
+      text.innerHTML = "Pastayı üflemeden önce dilek tut";
+      setTimeout(() => count(8), 1200);
+    }, 3600);
   }
-  else if(stage===3){
-    stage=4;lock=true;
-    setTimeout(()=>{
-      cake.style.display="none";
-      document.body.style.background="linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee)";
-      text.innerHTML="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
-    },2000);
+
+  /* 3️⃣ ÜFLEME */
+  else if (stage === 3) {
+    stage = 4;
+    lock = true;
+
+    // 🔥 SÖNME
+    age18.style.opacity = "0.2";
+    cake.style.filter = "grayscale(100%)";
+
+    // 🐱 pastayı alıp gitsin
+    setTimeout(() => {
+      carry.style.display = "flex";
+    }, 1200);
+
+    setTimeout(() => {
+      carry.style.display = "none";
+      cake.style.display = "none";
+      text.innerHTML = "";
+      document.body.style.background =
+        "linear-gradient(135deg,#ffd1dc,#ffb7c5,#ffe6ee)";
+    }, 2600);
+
+    setTimeout(() => {
+      card.style.display = "block";
+      stage = 6;
+      lock = false;
+    }, 3600);
   }
-  else if(stage===6){
-    card.style.display="none";
+
+  /* 6️⃣ MEKTUP */
+  else if (stage === 6) {
+    stage = 7;
+    lock = true;
+    card.style.display = "none";
     final();
   }
 });
 
-function count(n){
-  text.innerHTML="Pastayı üflemeden önce dilek tut<br><span class='count'>"+n+"</span>";
-  if(n>1) setTimeout(()=>count(n-1),1200);
-  else setTimeout(()=>{
-    text.innerHTML="Pastayı üflemek için ekrana dokun";
-    stage=3;lock=false;
-  },1400);
+/* ====== GERİ SAYIM ====== */
+function count(n) {
+  stage = 2;
+  text.innerHTML =
+    "Pastayı üflemeden önce dilek tut<br><span class='count'>" + n + "</span>";
+
+  if (n > 1) {
+    setTimeout(() => count(n - 1), 1200);
+  } else {
+    setTimeout(() => {
+      text.innerHTML = "Pastayı üflemek için ekrana dokun";
+      stage = 3;
+      lock = false;
+    }, 1200);
+  }
 }
 
-function final(){
-  const lines=[
+/* ====== FİNAL ====== */
+function final() {
+  const lines = [
     "<img src='biz.jpg' style='width:240px;border-radius:18px;margin-bottom:12px;'>",
     "Doğum Günün Kutlu Olsun Aşkım 💚",
     "İyi ki Varsın",
@@ -256,40 +117,15 @@ function final(){
     "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun 🤍",
     "<span class='signature'>Kaan’dan İclale</span>"
   ];
-  let i=0;
-  (function write(){
-    if(i>=lines.length){
-      balloons();
-      setTimeout(explode,4000);
-      return;
-    }
-    const d=document.createElement("div");
-    d.className="paper";
-    d.innerHTML=lines[i++];
+  let i = 0;
+
+  (function write() {
+    if (i >= lines.length) return;
+    const d = document.createElement("div");
+    d.className = "paper";
+    d.innerHTML = lines[i++];
     text.appendChild(d);
-    setTimeout(write,1100);
+    setTimeout(write, 1100);
   })();
 }
-
-function balloons(){
-  setInterval(()=>{
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=Math.random()*100+"vw";
-    b.textContent="🎈";
-    document.body.appendChild(b);
-    setTimeout(()=>b.remove(),8000);
-  },900);
-}
-
-function explode(){
-  const e=document.createElement("div");
-  e.className="explosion";
-  e.textContent="🎆";
-  document.body.appendChild(e);
-  setTimeout(()=>e.remove(),1600);
-}
 </script>
-
-</body>
-</html>
