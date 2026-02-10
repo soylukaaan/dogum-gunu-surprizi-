@@ -18,14 +18,14 @@ body{
   justify-content:center;
 }
 
-/* intro */
+/* 🔹 İLK EKRAN */
 body.intro-bg{
   background:
     linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
     url("intro.jpg") center/cover no-repeat;
 }
 
-/* pasta sahnesi */
+/* 🎂 SADECE PASTA EKRANI */
 body.cake-bg{
   background:
     linear-gradient(rgba(255,210,220,.65),rgba(255,210,220,.65)),
@@ -57,36 +57,20 @@ body.cake-bg{
 #carry .cake{font-size:120px}
 @keyframes carryIn{to{left:50%;transform:translateX(-50%)}}
 
-#cakeWrap{
+#cakeSolo{
   position:fixed;
-  bottom:6%;
+  bottom:8%;
   left:50%;
   transform:translateX(-50%);
   display:none;
-  text-align:center;
+  font-size:150px;
   z-index:6;
 }
-#cakeSolo{
-  font-size:150px;
-  position:relative;
-}
-
-#age{
-  position:absolute;
-  top:38%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:58px;
-  font-weight:bold;
-  color:#ff9800;
-  text-shadow:0 0 6px #ffb300,0 0 14px #ff6f00,0 0 22px #ff3d00;
-  animation:flame 1s infinite alternate;
-}
-@keyframes flame{to{opacity:.7;transform:translate(-50%,-52%) scale(1.05)}}
-
 .off{filter:grayscale(100%);opacity:.6}
+
 .count{font-size:70px;font-weight:bold}
 
+/* 📩 MEKTUP */
 #card{
   position:fixed;
   top:-300px;
@@ -135,7 +119,7 @@ body.cake-bg{
 
 <body class="intro-bg">
 
-<audio id="music">
+<audio id="music" preload="auto">
   <source src="dogum-gunu.mp3" type="audio/mpeg">
 </audio>
 
@@ -144,10 +128,7 @@ body.cake-bg{
   <div class="cake">🎂</div>
 </div>
 
-<div id="cakeWrap">
-  <div id="age">18</div>
-  <div id="cakeSolo">🎂</div>
-</div>
+<div id="cakeSolo">🎂</div>
 
 <div id="card">
   <img src="kiz.jpg">
@@ -160,12 +141,11 @@ body.cake-bg{
 <script>
 const text=document.getElementById("text");
 const carry=document.getElementById("carry");
-const cakeWrap=document.getElementById("cakeWrap");
 const cake=document.getElementById("cakeSolo");
 const card=document.getElementById("card");
 const music=document.getElementById("music");
 
-let stage=0, lock=true;
+let stage=0, lock=false, musicStarted=false;
 
 const intro=[
   "Koca Ayıdan Sana Bir Sürpriz Var 🎁",
@@ -179,22 +159,31 @@ intro.forEach((l,i)=>{
     d.className="paper";
     d.innerHTML=l;
     text.appendChild(d);
-    if(i===intro.length-1) lock=false;
   },1200*i);
 });
 
+function startMusic(){
+  music.muted=false;
+  music.play().catch(()=>{});
+}
+
 document.body.addEventListener("click",()=>{
+  if(!musicStarted){
+    musicStarted=true;
+    startMusic();
+  }
+
   if(lock) return;
 
   if(stage===0){
     stage=1; lock=true;
-    music.play().catch(()=>{});
-    document.body.className="cake-bg";
+    document.body.classList.remove("intro-bg");
+    document.body.classList.add("cake-bg");
     text.innerHTML="";
     carry.style.display="flex";
     setTimeout(()=>{
       carry.style.display="none";
-      cakeWrap.style.display="block";
+      cake.style.display="block";
       text.innerHTML="Pastayı üflemeden önce dilek tut";
       setTimeout(()=>count(8),1400);
     },3600);
@@ -202,12 +191,15 @@ document.body.addEventListener("click",()=>{
   else if(stage===3){
     stage=4; lock=true;
     cake.classList.add("off");
-    setTimeout(()=>carry.style.display="flex",1200);
+    setTimeout(()=>{
+      document.body.classList.remove("cake-bg");
+      carry.style.display="flex";
+    },1200);
     setTimeout(()=>{
       carry.style.display="none";
-      cakeWrap.style.display="none";
-      document.body.className="";
-      setTimeout(()=>{card.style.display="block";stage=6;lock=false},1500);
+      cake.style.display="none";
+      text.innerHTML="";
+      setTimeout(()=>{card.style.display="block";stage=6;lock=false},2000);
     },2600);
   }
   else if(stage===6){
@@ -236,13 +228,14 @@ function final(){
     "",
     "Birlikte Sağlıkla ve Mutlulukla Geçecek Nice Senelerimiz Olsun 🤍",
     "",
-    "<span class='signature'>Kaan’dan İclale</span>"
+    "<span class='signature'>Kaan’dan İclale</span>",
+    "Doğum günü sürprizi 🎂"
   ];
   let i=0;
   (function write(){
     if(i>=lines.length){
       balloons();
-      setTimeout(explode,3500);
+      setTimeout(explode,4000);
       return;
     }
     const d=document.createElement("div");
@@ -261,7 +254,7 @@ function balloons(){
     b.textContent="🎈";
     document.body.appendChild(b);
     setTimeout(()=>b.remove(),8000);
-  },600);
+  },900);
 }
 
 function explode(){
